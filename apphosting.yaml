@@ -1,0 +1,30 @@
+runConfig:
+  runtime: nodejs20
+  environmentVariables:
+    - variable: NEXT_PUBLIC_FIREBASE_API_KEY
+      value: AIzaSyBjdbOl0xyru5TfEQtu2iC2wqIz3QvrRQM
+      availability: RUNTIME
+    - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+      value: aconexaogoias.firebaseapp.com
+      availability: RUNTIME
+    - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+      value: aconexaogoias
+      availability: RUNTIME
+    - variable: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+      value: aconexaogoias.firebasestorage.app
+      availability: RUNTIME
+    - variable: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+      value: "6509088743"
+      availability: RUNTIME
+    - variable: NEXT_PUBLIC_FIREBASE_APP_ID
+      value: 1:6509088743:web:f1866c676e18c53204f742
+      availability: RUNTIME
+    - variable: NEXT_PUBLIC_APP_URL
+      availability: RUNTIME
+      secret: appurl
+
+  minInstances: 0
+  maxInstances: 10
+  concurrency: 80
+  cpu: 1
+  memoryMiB: 512

@@ -1,10 +1,7 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // TEMPORÁRIO: Permitir leitura para todas as coleções durante o build
-    match /{document=**} {
-      allow read: if true;
-    }
+    // Regras específicas para produção
     // Regras para usuários administradores
     match /users/{userId} {
       // Usuário pode ler e escrever seu próprio documento
@@ -182,6 +179,11 @@ service cloud.firestore {
     // Negar acesso a qualquer outra coleção
     match /{document=**} {
       allow read, write: if false;
+    }
+    // Regras para news_views (visualizações)
+    match /news_views/{viewId} {
+      allow read: if true; // Visualizações são públicas
+      allow write: if false; // Apenas via server-side (se houver)
     }
   }
 }

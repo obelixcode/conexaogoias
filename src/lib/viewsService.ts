@@ -15,6 +15,11 @@ export interface ViewData {
 export class ViewsService {
   // Incrementar visualização de uma notícia
   static async incrementView(newsId: string, sessionId: string): Promise<void> {
+    // Não incrementar views durante build estático
+    if (typeof window === 'undefined') {
+      return;
+    }
+    
     try {
       console.log('Incrementing view for newsId:', newsId, 'sessionId:', sessionId);
       

@@ -167,10 +167,10 @@ export function WordPressSidebar({ isCollapsed, onToggleCollapse }: WordPressSid
   const handleNavigation = useCallback((href: string) => {
     if (href && href !== '#') {
       console.log('Navigating to:', href);
-      // Use window.location for more reliable navigation
-      window.location.href = href;
+      // Use Next.js router for client-side navigation
+      router.push(href);
     }
-  }, []);
+  }, [router]);
 
   const isItemActive = (item: MenuItem): boolean => {
     if (item.href) {

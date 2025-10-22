@@ -272,6 +272,7 @@ function DashboardContent() {
           <Link
             href="/admin/editor"
             className="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            prefetch={false}
           >
             <FileText className="h-6 w-6 text-blue-600" />
             <div>
@@ -283,6 +284,7 @@ function DashboardContent() {
           <Link
             href="/admin/posts/categories"
             className="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            prefetch={false}
           >
             <FolderOpen className="h-6 w-6 text-green-600" />
             <div>
@@ -294,6 +296,7 @@ function DashboardContent() {
           <Link
             href="/admin/banners"
             className="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            prefetch={false}
           >
             <BarChart3 className="h-6 w-6 text-purple-600" />
             <div>

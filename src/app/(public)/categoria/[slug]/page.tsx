@@ -244,6 +244,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
 // Enable ISR with 60 seconds revalidation
 export const revalidate = 60;
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   try {

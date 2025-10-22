@@ -1,0 +1,20 @@
+{
+  "app/admin/roadmap/edit/[id]/page.tsx -> @/components/Editor": {
+    "id": 9614,
+    "files": [
+      "static/chunks/70e0d97a-85eab8d35b4fcc2e.js",
+      "static/chunks/54a60aa6-531920e0dc5f2dab.js",
+      "static/chunks/912-7bf096158c6c1598.js",
+      "static/chunks/9614-32b96060a6567c18.js"
+    ]
+  },
+  "app/admin/roadmap/new/page.tsx -> @/components/Editor": {
+    "id": 9614,
+    "files": [
+      "static/chunks/70e0d97a-85eab8d35b4fcc2e.js",
+      "static/chunks/54a60aa6-531920e0dc5f2dab.js",
+      "static/chunks/912-7bf096158c6c1598.js",
+      "static/chunks/9614-32b96060a6567c18.js"
+    ]
+  }
+}

@@ -58,6 +58,11 @@ export class AdminService {
   static async logout(): Promise<void> {
     try {
       await signOut(auth);
+      
+      // Delete session cookie
+      await fetch('/api/auth/session', {
+        method: 'DELETE',
+      });
     } catch (error) {
       console.error('Logout error:', error);
       throw new Error('Erro ao fazer logout');

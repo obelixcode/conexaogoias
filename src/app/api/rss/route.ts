@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { NewsService } from '@/lib/newsService';
 import { SettingsService } from '@/lib/settingsService';
 
-export const dynamic = 'force-static';
 export const revalidate = 3600; // Revalidar a cada hora
 
 export async function GET() {

@@ -1,7 +1,5 @@
 {
   "projects": {
-    "production": "aconexaogoias"
-  },
-  "targets": {},
-  "etags": {}
+    "default": "aconexaogoias"
+  }
 }

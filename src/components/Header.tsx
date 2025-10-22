@@ -40,7 +40,7 @@ export function Header({ categories }: HeaderProps) {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2" prefetch={false}>
             {settings.logoUrl ? (
               <img 
                 src={settings.logoUrl} 
@@ -63,6 +63,7 @@ export function Header({ categories }: HeaderProps) {
                 href={`/categoria/${category.slug}`}
                 className="font-medium transition-colors hover:opacity-80"
                 style={{ color: category.color }}
+                prefetch={false}
               >
                 {category.name.toUpperCase()}
               </Link>

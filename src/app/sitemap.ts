@@ -3,7 +3,6 @@ import { NewsService } from '@/lib/newsService';
 import { CategoryService } from '@/lib/categoryService';
 import { SettingsService } from '@/lib/settingsService';
 
-export const dynamic = 'force-static';
 export const revalidate = 3600; // Revalidar a cada hora
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

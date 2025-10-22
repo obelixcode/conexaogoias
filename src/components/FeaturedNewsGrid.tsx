@@ -117,6 +117,7 @@ function FeaturedNewsCard({ news, variant }: FeaturedNewsCardProps) {
     <Link 
       href={`/noticia/${news.slug}`}
       className={`group relative block overflow-hidden rounded-lg bg-white shadow-md transition-all duration-300 hover:shadow-xl hover:scale-[1.02] ${getCardClasses()}`}
+      prefetch={false}
     >
       {/* Imagem de fundo */}
       <div className="relative h-full w-full">

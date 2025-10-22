@@ -1,0 +1,271 @@
+{
+  "version": 3,
+  "pages404": true,
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:file((?!\\.well-known(?:/.*)?)(?:[^/]+/)*[^/]+\\.\\w+)/",
+      "destination": "/:file",
+      "internal": true,
+      "missing": [
+        {
+          "type": "header",
+          "key": "x-nextjs-data"
+        }
+      ],
+      "statusCode": 308,
+      "regex": "^(?:/((?!\\.well-known(?:/.*)?)(?:[^/]+/)*[^/]+\\.\\w+))/$"
+    },
+    {
+      "source": "/:notfile((?!\\.well-known(?:/.*)?)(?:[^/]+/)*[^/\\.]+)",
+      "destination": "/:notfile/",
+      "internal": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?!\\.well-known(?:/.*)?)(?:[^/]+/)*[^/\\.]+))$"
+    }
+  ],
+  "headers": [],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [
+    {
+      "page": "/admin/editor/[id]",
+      "regex": "^/admin/editor/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/admin/editor/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/admin/pages/edit/[id]",
+      "regex": "^/admin/pages/edit/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/admin/pages/edit/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/admin/roadmap/edit/[id]",
+      "regex": "^/admin/roadmap/edit/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/admin/roadmap/edit/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/categoria/[slug]",
+      "regex": "^/categoria/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPslug": "nxtPslug"
+      },
+      "namedRegex": "^/categoria/(?<nxtPslug>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/noticia/[slug]",
+      "regex": "^/noticia/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPslug": "nxtPslug"
+      },
+      "namedRegex": "^/noticia/(?<nxtPslug>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/pagina/[slug]",
+      "regex": "^/pagina/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPslug": "nxtPslug"
+      },
+      "namedRegex": "^/pagina/(?<nxtPslug>[^/]+?)(?:/)?$"
+    }
+  ],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/admin",
+      "regex": "^/admin(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin(?:/)?$"
+    },
+    {
+      "page": "/admin/banners",
+      "regex": "^/admin/banners(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/banners(?:/)?$"
+    },
+    {
+      "page": "/admin/categorias",
+      "regex": "^/admin/categorias(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/categorias(?:/)?$"
+    },
+    {
+      "page": "/admin/configuracoes",
+      "regex": "^/admin/configuracoes(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/configuracoes(?:/)?$"
+    },
+    {
+      "page": "/admin/dashboard",
+      "regex": "^/admin/dashboard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/dashboard(?:/)?$"
+    },
+    {
+      "page": "/admin/editor",
+      "regex": "^/admin/editor(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/editor(?:/)?$"
+    },
+    {
+      "page": "/admin/login",
+      "regex": "^/admin/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/login(?:/)?$"
+    },
+    {
+      "page": "/admin/media/library",
+      "regex": "^/admin/media/library(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/media/library(?:/)?$"
+    },
+    {
+      "page": "/admin/media/upload",
+      "regex": "^/admin/media/upload(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/media/upload(?:/)?$"
+    },
+    {
+      "page": "/admin/noticias",
+      "regex": "^/admin/noticias(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/noticias(?:/)?$"
+    },
+    {
+      "page": "/admin/pages",
+      "regex": "^/admin/pages(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/pages(?:/)?$"
+    },
+    {
+      "page": "/admin/pages/new",
+      "regex": "^/admin/pages/new(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/pages/new(?:/)?$"
+    },
+    {
+      "page": "/admin/posts",
+      "regex": "^/admin/posts(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/posts(?:/)?$"
+    },
+    {
+      "page": "/admin/posts/categories",
+      "regex": "^/admin/posts/categories(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/posts/categories(?:/)?$"
+    },
+    {
+      "page": "/admin/posts/tags",
+      "regex": "^/admin/posts/tags(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/posts/tags(?:/)?$"
+    },
+    {
+      "page": "/admin/profile",
+      "regex": "^/admin/profile(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/profile(?:/)?$"
+    },
+    {
+      "page": "/admin/roadmap",
+      "regex": "^/admin/roadmap(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/roadmap(?:/)?$"
+    },
+    {
+      "page": "/admin/roadmap/new",
+      "regex": "^/admin/roadmap/new(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/roadmap/new(?:/)?$"
+    },
+    {
+      "page": "/admin/users",
+      "regex": "^/admin/users(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/users(?:/)?$"
+    },
+    {
+      "page": "/busca",
+      "regex": "^/busca(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/busca(?:/)?$"
+    },
+    {
+      "page": "/contato",
+      "regex": "^/contato(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/contato(?:/)?$"
+    },
+    {
+      "page": "/favicon.ico",
+      "regex": "^/favicon\\.ico(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/favicon\\.ico(?:/)?$"
+    },
+    {
+      "page": "/politica-privacidade",
+      "regex": "^/politica\\-privacidade(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/politica\\-privacidade(?:/)?$"
+    },
+    {
+      "page": "/sitemap.xml",
+      "regex": "^/sitemap\\.xml(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sitemap\\.xml(?:/)?$"
+    },
+    {
+      "page": "/sobre-nos",
+      "regex": "^/sobre\\-nos(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sobre\\-nos(?:/)?$"
+    },
+    {
+      "page": "/termos-uso",
+      "regex": "^/termos\\-uso(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/termos\\-uso(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSuffix": ".prefetch.rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments"
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}

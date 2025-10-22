@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
@@ -10,11 +10,11 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { AdminService } from '@/lib/adminService';
 import { LoginCredentials } from '@/types';
-import { useSettingsContext } from '@/contexts/SettingsContext';
 import { getCurrentYear } from '@/utils/dateUtils';
 
 export default function AdminLoginPage() {
-  const { settings } = useSettingsContext();
+  // Usar configurações padrão para evitar problemas de hidratação
+  const siteName = 'Conexão Goiás';
   const [credentials, setCredentials] = useState<LoginCredentials>({
     email: '',
     password: ''
@@ -25,6 +25,7 @@ export default function AdminLoginPage() {
   const router = useRouter();
   const currentYear = getCurrentYear();
 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -33,8 +34,18 @@ export default function AdminLoginPage() {
     try {
       const user = await AdminService.login(credentials);
       
-      // Store user session (in a real app, you'd use a proper session management)
-      document.cookie = `admin-session=${JSON.stringify(user)}; path=/; max-age=86400; secure; samesite=strict`;
+      // Criar session cookie via API
+      const response = await fetch('/api/auth/session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ idToken: user.idToken }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao criar sessão');
+      }
       
       router.push('/admin/dashboard');
     } catch (error) {
@@ -53,6 +64,7 @@ export default function AdminLoginPage() {
     }));
   };
 
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -60,7 +72,7 @@ export default function AdminLoginPage() {
         <div className="text-center">
           <Link href="/" className="inline-block">
             <div className="text-4xl font-bold">
-              <span className="text-blue-900">{settings.siteName.toUpperCase()}</span>
+              <span className="text-blue-900">{siteName.toUpperCase()}</span>
               <span className="text-gray-500 text-lg">.com</span>
             </div>
           </Link>
@@ -149,7 +161,7 @@ export default function AdminLoginPage() {
 
         {/* Footer */}
         <div className="text-center text-xs text-gray-500">
-          <p>© {currentYear} {settings.siteName}. Todos os direitos reservados.</p>
+          <p>© {currentYear} {siteName}. Todos os direitos reservados.</p>
         </div>
       </div>
     </div>

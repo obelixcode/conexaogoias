@@ -37,7 +37,7 @@ export function NewsCard({
 
   if (variant === 'compact') {
     return (
-      <Link href={news.slug ? `/noticia/${news.slug}` : '#'} className={`${baseClasses} ${className}`}>
+      <Link href={news.slug ? `/noticia/${news.slug}` : '#'} className={`${baseClasses} ${className}`} prefetch={false}>
         <div className="flex space-x-3 p-3">
           <div className="shrink-0">
             <div className="relative w-20 h-16 rounded-md overflow-hidden">
@@ -70,7 +70,7 @@ export function NewsCard({
   }
 
   return (
-    <Link href={news.slug ? `/noticia/${news.slug}` : '#'} className={`${baseClasses} ${variantClasses[variant]} ${className}`}>
+    <Link href={news.slug ? `/noticia/${news.slug}` : '#'} className={`${baseClasses} ${variantClasses[variant]} ${className}`} prefetch={false}>
       <div className="relative">
         <div className="relative w-full h-48 overflow-hidden">
           {news.coverImage ? (

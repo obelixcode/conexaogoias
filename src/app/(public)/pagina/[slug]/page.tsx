@@ -3,8 +3,8 @@ import { notFound } from 'next/navigation';
 import { pageService, Page } from '@/lib/services/PageService';
 
 // Configurações de cache e revalidação
-export const revalidate = 60; // Revalidar a cada minuto
-export const dynamic = 'force-static'; // Forçar renderização estática
+export const revalidate = 3600; // Revalidar a cada hora (páginas mudam menos)
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   try {

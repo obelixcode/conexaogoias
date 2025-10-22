@@ -187,6 +187,11 @@ export class NewsService {
 
   // Increment views (with session protection)
   static async incrementViews(id: string): Promise<void> {
+    // Não incrementar views durante build estático
+    if (typeof window === 'undefined') {
+      return;
+    }
+    
     try {
       await updateDoc(doc(db, NEWS_COLLECTION, id), {
         views: increment(1)
