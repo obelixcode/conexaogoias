@@ -1,8 +1,0 @@
-# Redirect admin pages to a 404 or login page for static export
-/admin/* /404.html 404
-
-# API routes (if any remain)
-/api/* /404.html 404
-
-# Fallback for all other routes
-/* /index.html 200
