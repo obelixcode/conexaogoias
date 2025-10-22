@@ -3,8 +3,20 @@ import { notFound } from 'next/navigation';
 import { pageService, Page } from '@/lib/services/PageService';
 
 // Configurações de cache e revalidação
-export const revalidate = 0; // Sempre revalidar em desenvolvimento
-export const dynamic = 'force-dynamic'; // Forçar renderização dinâmica
+export const revalidate = 60; // Revalidar a cada minuto
+export const dynamic = 'force-static'; // Forçar renderização estática
+
+export async function generateStaticParams() {
+  try {
+    const pages = await pageService.getPages({ status: 'published' });
+    return pages.map((page) => ({
+      slug: page.slug,
+    }));
+  } catch (error) {
+    console.error('Error generating static params for pages:', error);
+    return [];
+  }
+}
 
 interface PageProps {
   params: Promise<{ slug: string }>;

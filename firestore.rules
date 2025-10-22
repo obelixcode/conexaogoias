@@ -1,6 +1,10 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // TEMPORÁRIO: Permitir leitura para todas as coleções durante o build
+    match /{document=**} {
+      allow read: if true;
+    }
     // Regras para usuários administradores
     match /users/{userId} {
       // Usuário pode ler e escrever seu próprio documento
@@ -28,20 +32,19 @@ service cloud.firestore {
       // Qualquer um pode ler notícias publicadas
       allow read: if resource.data.isPublished == true;
       
-      // TEMPORÁRIO: Permitir leitura de todas as notícias para desenvolvimento
-      allow read: if true;
-      
-      // TEMPORÁRIO: Permitir escrita para desenvolvimento (remover em produção)
-      allow create, update, delete: if true;
+      // Apenas usuários autenticados com role admin/super_admin podem escrever
+      allow create, update, delete: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
     }
     
     // Regras para categorias
     match /categories/{categoryId} {
-      // Qualquer um pode ler categorias
+      // Qualquer um pode ler categorias (temporário para build)
       allow read: if true;
       
-      // TEMPORÁRIO: Permitir escrita para desenvolvimento (remover em produção)
-      allow create, update, delete: if true;
+      // Apenas usuários autenticados com role admin/super_admin podem escrever
+      allow create, update, delete: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
     }
     
     // Regras para tags
@@ -49,8 +52,9 @@ service cloud.firestore {
       // Qualquer um pode ler tags
       allow read: if true;
       
-      // TEMPORÁRIO: Permitir escrita para desenvolvimento (remover em produção)
-      allow create, update, delete: if true;
+      // Apenas usuários autenticados com role admin/super_admin podem escrever
+      allow create, update, delete: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
     }
     
     // Regras para biblioteca de mídia
@@ -58,8 +62,9 @@ service cloud.firestore {
       // Qualquer um pode ler mídia
       allow read: if true;
       
-      // TEMPORÁRIO: Permitir escrita para desenvolvimento (remover em produção)
-      allow create, update, delete: if true;
+      // Apenas usuários autenticados com role admin/super_admin podem escrever
+      allow create, update, delete: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
     }
     
     // Regras para páginas estáticas
@@ -67,32 +72,33 @@ service cloud.firestore {
       // Qualquer um pode ler páginas publicadas
       allow read: if resource.data.status == 'published';
       
-      // TEMPORÁRIO: Permitir leitura de todas as páginas para desenvolvimento
-      allow read: if true;
-      
-      // TEMPORÁRIO: Permitir escrita para desenvolvimento (remover em produção)
-      allow create, update, delete: if true;
+      // Apenas usuários autenticados com role admin/super_admin podem escrever
+      allow create, update, delete: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
     }
     
     // Regras para banners
     match /banners/{bannerId} {
-      // Qualquer um pode ler banners ativos
-      allow read: if resource.data.isActive == true;
-      
-      // TEMPORÁRIO: Permitir leitura de todos os banners para desenvolvimento
+      // Qualquer um pode ler banners (temporário para build)
       allow read: if true;
       
-      // TEMPORÁRIO: Permitir escrita para desenvolvimento (remover em produção)
-      allow create, update, delete: if true;
+      // Apenas usuários autenticados com role admin/super_admin podem escrever
+      allow create, update, delete: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
     }
     
     // Regras para cliques de banners
     match /bannerClicks/{clickId} {
-      // Qualquer um pode ler cliques de banners
-      allow read: if true;
+      // Apenas admins podem ler cliques de banners
+      allow read: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
       
-      // TEMPORÁRIO: Permitir escrita para desenvolvimento (remover em produção)
-      allow create, update, delete: if true;
+      // Qualquer um pode criar cliques (para tracking)
+      allow create: if true;
+      
+      // Apenas admins podem atualizar/deletar
+      allow update, delete: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
     }
     
     // Regras para visualizações
@@ -103,11 +109,13 @@ service cloud.firestore {
     
     // Regras para estatísticas
     match /stats/{statId} {
-      // TEMPORÁRIO: Permitir leitura para desenvolvimento
-      allow read: if true;
+      // Apenas admins podem ler estatísticas
+      allow read: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
       
-      // TEMPORÁRIO: Permitir escrita para desenvolvimento
-      allow write: if true;
+      // Apenas admins podem escrever estatísticas
+      allow write: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
     }
     
     // Regras para configurações do site
@@ -115,12 +123,9 @@ service cloud.firestore {
       // Qualquer um pode ler configurações (para o site público)
       allow read: if true;
       
-      // TEMPORÁRIO: Permitir escrita para desenvolvimento (remover em produção)
-      allow write: if true;
-      
-      // Apenas admins podem escrever configurações (comentado para desenvolvimento)
-      // allow write: if request.auth != null && 
-      //   get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      // Apenas admins podem escrever configurações
+      allow write: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
     }
     
     // Regras para newsletter
@@ -128,42 +133,40 @@ service cloud.firestore {
       // Qualquer um pode criar inscrições
       allow create: if true;
       
-      // TEMPORÁRIO: Permitir leitura para desenvolvimento (remover em produção)
-      allow read: if true;
-      
-      // TEMPORÁRIO: Permitir escrita para desenvolvimento (remover em produção)
-      allow update, delete: if true;
+      // Apenas admins podem ler e gerenciar inscrições
+      allow read, update, delete: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
     }
     
     // Regras para logs de auditoria
     match /audit_logs/{logId} {
-      // TEMPORÁRIO: Permitir leitura e escrita para desenvolvimento
-      allow read, write: if true;
+      // Apenas admins podem ler logs de auditoria
+      allow read: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
+      
+      // Apenas o sistema pode escrever logs (via Cloud Functions)
+      allow write: if false;
     }
     
     // Regras para roadmap
     match /roadmap_requests/{requestId} {
-      // TEMPORÁRIO: Permitir acesso para desenvolvimento
-      allow read, write: if true;
-      
-      // Apenas admins podem ler e escrever solicitações do roadmap (comentado para desenvolvimento)
-      // allow read, write: if request.auth != null && 
-      //   get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
+      // Apenas admins podem ler e escrever solicitações do roadmap
+      allow read, write: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
     }
     
     // Regras para timeline de status do roadmap
     match /roadmap_status_timeline/{timelineId} {
-      // TEMPORÁRIO: Permitir acesso para desenvolvimento
-      allow read, write: if true;
+      // Apenas admins podem ler timeline
+      allow read: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
       
-      // Apenas admins podem ler timeline (comentado para desenvolvimento)
-      // allow read: if request.auth != null && 
-      //   get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
-      // Apenas admins podem criar entradas na timeline (comentado para desenvolvimento)
-      // allow create: if request.auth != null && 
-      //   get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
+      // Apenas admins podem criar entradas na timeline
+      allow create: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
+      
       // Não permitir atualização ou exclusão da timeline (auditoria)
-      // allow update, delete: if false;
+      allow update, delete: if false;
     }
     
     // Regras para configuração de notícias em destaque

@@ -228,3 +228,15 @@ export default async function NewsPage({ params }: NewsPageProps) {
 
 // Enable ISR with 60 seconds revalidation
 export const revalidate = 60;
+
+export async function generateStaticParams() {
+  try {
+    const recentNews = await NewsService.getRecentNews(1000);
+    return recentNews.map((news) => ({
+      slug: news.slug,
+    }));
+  } catch (error) {
+    console.error('Error generating static params for news:', error);
+    return [];
+  }
+}

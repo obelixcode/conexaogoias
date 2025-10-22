@@ -244,3 +244,15 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
 // Enable ISR with 60 seconds revalidation
 export const revalidate = 60;
+
+export async function generateStaticParams() {
+  try {
+    const categories = await CategoryService.getActiveCategories();
+    return categories.map((category) => ({
+      slug: category.slug,
+    }));
+  } catch (error) {
+    console.error('Error generating static params for categories:', error);
+    return [];
+  }
+}

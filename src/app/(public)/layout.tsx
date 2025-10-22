@@ -5,7 +5,7 @@ import { SidebarSkeleton } from '@/components/LoadingSkeleton';
 
 // Configurações de cache para o layout
 export const revalidate = 0;
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-static';
 function PublicLayoutContent({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
