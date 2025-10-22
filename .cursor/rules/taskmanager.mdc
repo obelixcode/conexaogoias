@@ -1,0 +1,10 @@
+---
+alwaysApply: true
+---
+All changes and improvements must be applied without breaking any current functionality.
+
+When requested to do something:
+1. Identify possible impacts on existing features
+2. Create a super structured ToDo with multiple steps
+3. For very large tasks, break them down into micro-tasks
+4. Organize tasks in priority order respecting dependencies

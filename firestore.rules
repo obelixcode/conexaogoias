@@ -1,0 +1,184 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Regras para usuários administradores
+    match /users/{userId} {
+      // Usuário pode ler e escrever seu próprio documento
+      allow read, write: if request.auth != null && 
+        request.auth.uid == userId;
+      
+      // Admins podem ler qualquer usuário
+      allow read: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
+      
+      // Admins podem escrever qualquer usuário
+      allow write: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
+    }
+    
+    // Regras para listagem de usuários (coleção inteira)
+    match /users/{document=**} {
+      // Admins podem listar todos os usuários
+      allow read: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
+    }
+    
+    // Regras para notícias
+    match /news/{newsId} {
+      // Qualquer um pode ler notícias publicadas
+      allow read: if resource.data.isPublished == true;
+      
+      // TEMPORÁRIO: Permitir leitura de todas as notícias para desenvolvimento
+      allow read: if true;
+      
+      // TEMPORÁRIO: Permitir escrita para desenvolvimento (remover em produção)
+      allow create, update, delete: if true;
+    }
+    
+    // Regras para categorias
+    match /categories/{categoryId} {
+      // Qualquer um pode ler categorias
+      allow read: if true;
+      
+      // TEMPORÁRIO: Permitir escrita para desenvolvimento (remover em produção)
+      allow create, update, delete: if true;
+    }
+    
+    // Regras para tags
+    match /tags/{tagId} {
+      // Qualquer um pode ler tags
+      allow read: if true;
+      
+      // TEMPORÁRIO: Permitir escrita para desenvolvimento (remover em produção)
+      allow create, update, delete: if true;
+    }
+    
+    // Regras para biblioteca de mídia
+    match /media/{mediaId} {
+      // Qualquer um pode ler mídia
+      allow read: if true;
+      
+      // TEMPORÁRIO: Permitir escrita para desenvolvimento (remover em produção)
+      allow create, update, delete: if true;
+    }
+    
+    // Regras para páginas estáticas
+    match /pages/{pageId} {
+      // Qualquer um pode ler páginas publicadas
+      allow read: if resource.data.status == 'published';
+      
+      // TEMPORÁRIO: Permitir leitura de todas as páginas para desenvolvimento
+      allow read: if true;
+      
+      // TEMPORÁRIO: Permitir escrita para desenvolvimento (remover em produção)
+      allow create, update, delete: if true;
+    }
+    
+    // Regras para banners
+    match /banners/{bannerId} {
+      // Qualquer um pode ler banners ativos
+      allow read: if resource.data.isActive == true;
+      
+      // TEMPORÁRIO: Permitir leitura de todos os banners para desenvolvimento
+      allow read: if true;
+      
+      // TEMPORÁRIO: Permitir escrita para desenvolvimento (remover em produção)
+      allow create, update, delete: if true;
+    }
+    
+    // Regras para cliques de banners
+    match /bannerClicks/{clickId} {
+      // Qualquer um pode ler cliques de banners
+      allow read: if true;
+      
+      // TEMPORÁRIO: Permitir escrita para desenvolvimento (remover em produção)
+      allow create, update, delete: if true;
+    }
+    
+    // Regras para visualizações
+    match /news_views/{newsId} {
+      // Qualquer um pode ler e escrever visualizações
+      allow read, write: if true;
+    }
+    
+    // Regras para estatísticas
+    match /stats/{statId} {
+      // TEMPORÁRIO: Permitir leitura para desenvolvimento
+      allow read: if true;
+      
+      // TEMPORÁRIO: Permitir escrita para desenvolvimento
+      allow write: if true;
+    }
+    
+    // Regras para configurações do site
+    match /settings/{settingId} {
+      // Qualquer um pode ler configurações (para o site público)
+      allow read: if true;
+      
+      // TEMPORÁRIO: Permitir escrita para desenvolvimento (remover em produção)
+      allow write: if true;
+      
+      // Apenas admins podem escrever configurações (comentado para desenvolvimento)
+      // allow write: if request.auth != null && 
+      //   get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Regras para newsletter
+    match /newsletter_subscriptions/{subscriptionId} {
+      // Qualquer um pode criar inscrições
+      allow create: if true;
+      
+      // TEMPORÁRIO: Permitir leitura para desenvolvimento (remover em produção)
+      allow read: if true;
+      
+      // TEMPORÁRIO: Permitir escrita para desenvolvimento (remover em produção)
+      allow update, delete: if true;
+    }
+    
+    // Regras para logs de auditoria
+    match /audit_logs/{logId} {
+      // TEMPORÁRIO: Permitir leitura e escrita para desenvolvimento
+      allow read, write: if true;
+    }
+    
+    // Regras para roadmap
+    match /roadmap_requests/{requestId} {
+      // TEMPORÁRIO: Permitir acesso para desenvolvimento
+      allow read, write: if true;
+      
+      // Apenas admins podem ler e escrever solicitações do roadmap (comentado para desenvolvimento)
+      // allow read, write: if request.auth != null && 
+      //   get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
+    }
+    
+    // Regras para timeline de status do roadmap
+    match /roadmap_status_timeline/{timelineId} {
+      // TEMPORÁRIO: Permitir acesso para desenvolvimento
+      allow read, write: if true;
+      
+      // Apenas admins podem ler timeline (comentado para desenvolvimento)
+      // allow read: if request.auth != null && 
+      //   get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
+      // Apenas admins podem criar entradas na timeline (comentado para desenvolvimento)
+      // allow create: if request.auth != null && 
+      //   get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
+      // Não permitir atualização ou exclusão da timeline (auditoria)
+      // allow update, delete: if false;
+    }
+    
+    // Regras para configuração de notícias em destaque
+    match /featured_news_config/{docId} {
+      // Qualquer um pode ler (para exibir na homepage)
+      allow read: if true;
+      
+      // Apenas admins podem escrever
+      allow write: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'super_admin'];
+    }
+    
+    // Negar acesso a qualquer outra coleção
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

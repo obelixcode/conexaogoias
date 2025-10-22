@@ -1,0 +1,112 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Regras para imagens de capa de notícias
+    match /covers/{fileName} {
+      // Qualquer um pode ler imagens de capa (público)
+      allow read: if true;
+      
+      // Apenas usuários autenticados podem fazer upload
+      allow write: if request.auth != null &&
+        request.resource.size < 5 * 1024 * 1024 && // 5MB max
+        request.resource.contentType.matches('image/.*');
+    }
+    
+    // Regras para imagens de conteúdo
+    match /content/{fileName} {
+      // Qualquer um pode ler imagens de conteúdo (público)
+      allow read: if true;
+      
+      // Apenas usuários autenticados podem fazer upload
+      allow write: if request.auth != null &&
+        request.resource.size < 5 * 1024 * 1024 && // 5MB max
+        request.resource.contentType.matches('image/.*');
+    }
+    
+    // Regras para banners - TOTALMENTE PÚBLICOS
+    match /banners/{fileName} {
+      // Qualquer um pode ler banners (público)
+      allow read: if true;
+      
+      // Qualquer um pode fazer upload (para desenvolvimento)
+      // TODO: Em produção, considerar exigir autenticação
+      allow write: if request.resource.size < 10 * 1024 * 1024 && // 10MB max
+        request.resource.contentType.matches('image/.*');
+    }
+    
+    // Regras para biblioteca de mídia
+    match /media/{fileName} {
+      // Qualquer um pode ler arquivos de mídia (público)
+      allow read: if true;
+      
+      // Apenas usuários autenticados podem fazer upload
+      allow write: if request.auth != null &&
+        request.resource.size < 10 * 1024 * 1024 && // 10MB max
+        (request.resource.contentType.matches('image/.*') ||
+         request.resource.contentType.matches('video/.*') ||
+         request.resource.contentType.matches('application/pdf'));
+    }
+    
+    // Regras para imagens de perfil
+    match /profiles/{userId}/{fileName} {
+      // Usuários podem ler suas próprias imagens
+      allow read: if request.auth != null && request.auth.uid == userId;
+      
+      // Usuários podem fazer upload de suas próprias imagens
+      allow write: if request.auth != null && 
+        request.auth.uid == userId &&
+        request.resource.size < 2 * 1024 * 1024 && // 2MB max
+        request.resource.contentType.matches('image/.*');
+    }
+    
+    // Regras para arquivos temporários
+    match /temp/{userId}/{fileName} {
+      // Usuários podem gerenciar seus próprios arquivos temporários
+      allow read, write: if request.auth != null && 
+        request.auth.uid == userId &&
+        request.resource.size < 10 * 1024 * 1024; // 10MB max
+    }
+    
+    // Regras para favicons
+    match /favicons/{fileName} {
+      // Qualquer um pode ler favicons (público)
+      allow read: if true;
+      
+      // Apenas usuários autenticados podem fazer upload
+      allow write: if request.auth != null &&
+        request.resource.size < 1 * 1024 * 1024 && // 1MB max
+        request.resource.contentType.matches('image/.*');
+    }
+    
+    // Regras para logos
+    match /logos/{fileName} {
+      // Qualquer um pode ler logos (público)
+      allow read: if true;
+      
+      // Apenas usuários autenticados podem fazer upload
+      allow write: if request.auth != null &&
+        request.resource.size < 2 * 1024 * 1024 && // 2MB max
+        request.resource.contentType.matches('image/.*');
+    }
+    
+    // Regras para imagens do roadmap
+    match /roadmap/{fileName} {
+      // Qualquer um pode ler imagens do roadmap (público)
+      allow read: if true;
+      
+      // Apenas usuários autenticados podem fazer upload
+      allow write: if request.auth != null &&
+        request.resource.size < 5 * 1024 * 1024 && // 5MB max
+        request.resource.contentType.matches('image/.*');
+    }
+    
+    // Regra geral para qualquer outro arquivo - PÚBLICO
+    match /{allPaths=**} {
+      // Qualquer um pode ler qualquer arquivo (público)
+      allow read: if true;
+      
+      // Negar escrita para arquivos não especificados acima
+      allow write: if false;
+    }
+  }
+}
