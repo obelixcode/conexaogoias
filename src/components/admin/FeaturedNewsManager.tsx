@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { formatDate } from '@/utils/formatDate';
 import { 
   DndContext, 
   closestCenter, 
@@ -97,7 +98,7 @@ function SortableNewsItem({ news, index, onRemove }: SortableNewsItemProps) {
           </WordPressBadge>
         </div>
         <p className="text-xs text-gray-500 mt-1">
-          {news.views} visualizações • {new Date(news.publishedAt).toLocaleDateString('pt-BR')}
+          {news.views} visualizações • {formatDate(news.publishedAt, 'dd/MM/yyyy')}
         </p>
       </div>
       
@@ -346,7 +347,7 @@ export function FeaturedNewsManager({ onClose, onSave, userId }: FeaturedNewsMan
                       </WordPressBadge>
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
-                      {news.views} visualizações • {new Date(news.publishedAt || news.createdAt).toLocaleDateString('pt-BR')}
+                      {news.views} visualizações • {formatDate(news.publishedAt || news.createdAt, 'dd/MM/yyyy')}
                     </p>
                   </div>
                   

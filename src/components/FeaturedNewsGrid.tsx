@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { FeaturedNews } from '@/types/news';
+import { formatDate } from '@/utils/formatDate';
 
 interface FeaturedNewsGridProps {
   featuredNews: FeaturedNews[];
@@ -164,7 +165,7 @@ function FeaturedNewsCard({ news, variant }: FeaturedNewsCardProps) {
           {/* Informações adicionais */}
           <div className="flex items-center justify-between mt-3 text-xs text-gray-200 drop-shadow-md">
             <span className="font-medium">{news.views} visualizações</span>
-            <span className="font-medium">{new Date(news.publishedAt).toLocaleDateString('pt-BR')}</span>
+            <span className="font-medium">{formatDate(news.publishedAt, 'dd/MM/yyyy')}</span>
           </div>
         </div>
       </div>
