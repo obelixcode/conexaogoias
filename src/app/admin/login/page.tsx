@@ -21,12 +21,19 @@ export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const router = useRouter();
   const currentYear = getCurrentYear();
 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Evitar múltiplos envios
+    if (isLoading || isRedirecting) {
+      return;
+    }
+    
     setIsLoading(true);
     setError('');
 
@@ -45,6 +52,7 @@ export default function AdminLoginPage() {
         console.log('✅ Login via sistema básico bem-sucedido');
         console.log('🔄 Redirecionando para dashboard...');
         
+        setIsRedirecting(true);
         // Pequeno delay para garantir que a sessão seja processada
         setTimeout(() => {
           router.replace('/admin/dashboard');
@@ -76,6 +84,7 @@ export default function AdminLoginPage() {
         throw new Error('Erro ao criar sessão');
       }
       
+      setIsRedirecting(true);
       // Pequeno delay para garantir que a sessão seja processada
       setTimeout(() => {
         router.replace('/admin/dashboard');
@@ -103,7 +112,9 @@ export default function AdminLoginPage() {
       
       setError(errorMessage);
     } finally {
-      setIsLoading(false);
+      if (!isRedirecting) {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -191,12 +202,12 @@ export default function AdminLoginPage() {
                 </div>
               </div>
 
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={isLoading}
+              <Button 
+                type="submit" 
+                className="w-full" 
+                disabled={isLoading || isRedirecting}
               >
-                {isLoading ? 'Entrando...' : 'Entrar'}
+                {isRedirecting ? 'Redirecionando...' : isLoading ? 'Entrando...' : 'Entrar'}
               </Button>
             </form>
 

@@ -35,6 +35,7 @@ export async function middleware(request: NextRequest) {
   
   // Se é página de login e tem sessão válida, redirecionar para dashboard
   if (isLoginPage && hasValidSession) {
+    console.log('🔄 Middleware - Redirecionando usuário logado para dashboard');
     return NextResponse.redirect(new URL('/admin/dashboard', request.url));
   }
   
