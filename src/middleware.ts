@@ -27,7 +27,7 @@ export async function middleware(request: NextRequest) {
         if (userData.expiresAt && Date.now() < userData.expiresAt) {
           hasValidSession = true;
         }
-      } catch (error) {
+      } catch {
         hasValidSession = false;
       }
     }

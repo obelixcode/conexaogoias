@@ -4,7 +4,7 @@ import { cookies } from 'next/headers';
 
 export async function POST(request: NextRequest) {
   try {
-    const { idToken, userData } = await request.json();
+    const { userData } = await request.json();
     
     // Para simplificar, aceitar dados do usuário diretamente
     // Em produção, você validaria o idToken com Firebase

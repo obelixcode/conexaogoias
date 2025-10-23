@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -23,7 +23,6 @@ export default function AdminLoginPage() {
   const [error, setError] = useState('');
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const router = useRouter();
   const currentYear = getCurrentYear();
 
   useEffect(() => {
@@ -53,7 +52,6 @@ export default function AdminLoginPage() {
       });
 
       if (basicResponse.ok) {
-        const basicData = await basicResponse.json();
         console.log('✅ Login via sistema básico bem-sucedido');
         console.log('🔄 Redirecionando para dashboard...');
         
@@ -98,25 +96,33 @@ export default function AdminLoginPage() {
           window.location.href = '/admin/dashboard';
         }
       }, 100);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Erro no login:', error);
-      console.error('Código do erro:', error.code);
-      console.error('Mensagem do erro:', error.message);
       
       let errorMessage = 'Erro ao fazer login';
-      
-      if (error.code === 'auth/user-not-found') {
-        errorMessage = 'Usuário não encontrado';
-      } else if (error.code === 'auth/wrong-password') {
-        errorMessage = 'Senha incorreta';
-      } else if (error.code === 'auth/invalid-email') {
-        errorMessage = 'Email inválido';
-      } else if (error.code === 'auth/too-many-requests') {
-        errorMessage = 'Muitas tentativas. Tente novamente mais tarde';
-      } else if (error.code === 'auth/invalid-credential') {
-        errorMessage = 'Credenciais inválidas. Verifique se o usuário existe no sistema.';
-      } else if (error.message) {
-        errorMessage = error.message;
+
+      // Verificar se é um erro do Firebase
+      if (error && typeof error === 'object' && 'code' in error) {
+        const firebaseError = error as { code: string; message: string };
+        console.error('Código do erro:', firebaseError.code);
+        console.error('Mensagem do erro:', firebaseError.message);
+
+        if (firebaseError.code === 'auth/user-not-found') {
+          errorMessage = 'Usuário não encontrado';
+        } else if (firebaseError.code === 'auth/wrong-password') {
+          errorMessage = 'Senha incorreta';
+        } else if (firebaseError.code === 'auth/invalid-email') {
+          errorMessage = 'Email inválido';
+        } else if (firebaseError.code === 'auth/too-many-requests') {
+          errorMessage = 'Muitas tentativas. Tente novamente mais tarde';
+        } else if (firebaseError.code === 'auth/invalid-credential') {
+          errorMessage = 'Credenciais inválidas. Verifique se o usuário existe no sistema.';
+        } else if (firebaseError.message) {
+          errorMessage = firebaseError.message;
+        }
+      } else if (error && typeof error === 'object' && 'message' in error) {
+        const genericError = error as { message: string };
+        errorMessage = genericError.message;
       }
       
       setError(errorMessage);
@@ -161,12 +167,12 @@ export default function AdminLoginPage() {
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <a href="/" className="inline-block">
-            <div className="text-4xl font-bold">
-              <span className="text-blue-900">{siteName.toUpperCase()}</span>
-              <span className="text-gray-500 text-lg">.com</span>
-            </div>
-          </a>
+            <Link href="/" className="inline-block">
+              <div className="text-4xl font-bold">
+                <span className="text-blue-900">{siteName.toUpperCase()}</span>
+                <span className="text-gray-500 text-lg">.com</span>
+              </div>
+            </Link>
           <h2 className="mt-6 text-3xl font-bold text-gray-900">
             Painel Administrativo
           </h2>
@@ -240,12 +246,12 @@ export default function AdminLoginPage() {
             </form>
 
             <div className="mt-6 text-center">
-              <a
-                href="/"
-                className="text-sm text-blue-600 hover:text-blue-500"
-              >
-                ← Voltar ao site
-              </a>
+            <Link
+              href="/"
+              className="text-sm text-blue-600 hover:text-blue-500"
+            >
+              ← Voltar ao site
+            </Link>
             </div>
           </CardContent>
         </Card>
