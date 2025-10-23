@@ -1,6 +1,8 @@
 'use client';
 
 import { Suspense, useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { 
   FileText, 
   Eye, 
@@ -65,6 +67,9 @@ function StatsCard({ title, value, description, icon: Icon, trend }: StatsCardPr
 function DashboardContent() {
   const { settings } = useSettingsContext();
   const { user } = useUser();
+  const router = useRouter();
+
+  // Todos os hooks devem ser chamados antes de qualquer return condicional
   const [newsStats, setNewsStats] = useState<NewsStats>({
     totalNews: 0,
     publishedNews: 0,
@@ -92,6 +97,14 @@ function DashboardContent() {
   const [, setIsLoading] = useState(true);
   const [showFeaturedManager, setShowFeaturedManager] = useState(false);
   const [featuredNews, setFeaturedNews] = useState<FeaturedNews[]>([]);
+
+  // Verificar se o usuário está autenticado
+  useEffect(() => {
+    if (!user) {
+      console.log('🔒 Usuário não autenticado - redirecionando para login');
+      router.push('/admin/login');
+    }
+  }, [user, router]);
 
   const loadStats = async () => {
     try {
@@ -128,6 +141,19 @@ function DashboardContent() {
     loadStats();
   }, []);
 
+  // Se não há usuário, mostrar loading e redirecionar
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-2 text-gray-600">Verificando autenticação...</p>
+          <p className="mt-1 text-sm text-red-600">Redirecionando para login...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -137,10 +163,10 @@ function DashboardContent() {
           <p className="text-gray-600">Visão geral do {settings.siteDescription.toLowerCase()}</p>
         </div>
         <WordPressButton asChild>
-          <a href="/admin/editor" className="flex items-center">
+          <Link href="/admin/editor" className="flex items-center">
             <Plus className="h-4 w-4 mr-2" />
             Nova Notícia
-          </a>
+          </Link>
         </WordPressButton>
       </div>
 
@@ -268,7 +294,7 @@ function DashboardContent() {
       {/* Quick Actions */}
       <WordPressCard title="Ações Rápidas" description="Acesso rápido às principais funcionalidades">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <a
+          <Link
             href="/admin/editor"
             className="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
@@ -277,9 +303,9 @@ function DashboardContent() {
               <h3 className="font-medium">Nova Notícia</h3>
               <p className="text-sm text-gray-500">Criar uma nova matéria</p>
             </div>
-          </a>
+          </Link>
           
-          <a
+          <Link
             href="/admin/posts/categories"
             className="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
@@ -288,9 +314,9 @@ function DashboardContent() {
               <h3 className="font-medium">Gerenciar Categorias</h3>
               <p className="text-sm text-gray-500">Organizar categorias</p>
             </div>
-          </a>
+          </Link>
           
-          <a
+          <Link
             href="/admin/banners"
             className="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
@@ -299,7 +325,7 @@ function DashboardContent() {
               <h3 className="font-medium">Gerenciar Banners</h3>
               <p className="text-sm text-gray-500">Configurar publicidade</p>
             </div>
-          </a>
+          </Link>
         </div>
       </WordPressCard>
 

@@ -33,13 +33,20 @@ export default function AdminLoginPage() {
     try {
       const { user, idToken } = await AdminService.login(credentials);
       
-      // Criar session cookie via API
+      // Criar session cookie via API com dados do usuário
       const response = await fetch('/api/auth/session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ idToken }),
+        body: JSON.stringify({ 
+          idToken,
+          userData: {
+            uid: user.uid,
+            email: user.email,
+            name: user.displayName || 'Administrador'
+          }
+        }),
       });
 
       if (!response.ok) {

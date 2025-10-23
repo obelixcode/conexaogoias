@@ -17,11 +17,10 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 
-// Configurar emuladores em desenvolvimento (se necessário)
-if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
+// Configurar emuladores apenas se explicitamente habilitados
+if (process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true' && typeof window !== 'undefined') {
   try {
     // Conectar emuladores apenas se não estiverem já conectados
-    // Usar try/catch para detectar se já estão conectados
     connectAuthEmulator(auth, 'http://localhost:9099');
     connectFirestoreEmulator(db, 'localhost', 8080);
     connectStorageEmulator(storage, 'localhost', 9199);
@@ -30,6 +29,8 @@ if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
     // Emuladores já conectados ou não disponíveis
     console.log('Emuladores não configurados ou já conectados');
   }
+} else {
+  console.log('✅ Firebase configurado para produção');
 }
 
 export default app;

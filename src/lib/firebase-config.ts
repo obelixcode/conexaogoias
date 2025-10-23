@@ -33,7 +33,7 @@ export function validateFirebaseConfig() {
 // Configuração do Firebase Admin
 export const firebaseAdminConfig = {
   projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,
-  privateKey: process.env.FIREBASE_ADMIN_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+  privateKey: process.env.FIREBASE_ADMIN_PRIVATE_KEY?.replace(/\\n/g, '\n')?.replace(/"/g, ''),
   clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
 };
 
