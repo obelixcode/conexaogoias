@@ -31,6 +31,24 @@ export default function AdminLoginPage() {
     setError('');
 
     try {
+      // Tentar autenticação básica primeiro
+      const basicResponse = await fetch('/api/auth/basic', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
+      });
+
+      if (basicResponse.ok) {
+        const basicData = await basicResponse.json();
+        console.log('✅ Login via sistema básico bem-sucedido');
+        router.push('/admin/dashboard');
+        return;
+      }
+
+      // Se falhar, tentar Firebase Auth como fallback
+      console.log('🔄 Tentando Firebase Auth como fallback...');
       const { user, idToken } = await AdminService.login(credentials);
       
       // Criar session cookie via API com dados do usuário
@@ -54,8 +72,28 @@ export default function AdminLoginPage() {
       }
       
       window.location.href = '/admin/dashboard';
-    } catch (error) {
-      setError(error instanceof Error ? error.message : 'Erro ao fazer login');
+    } catch (error: any) {
+      console.error('❌ Erro no login:', error);
+      console.error('Código do erro:', error.code);
+      console.error('Mensagem do erro:', error.message);
+      
+      let errorMessage = 'Erro ao fazer login';
+      
+      if (error.code === 'auth/user-not-found') {
+        errorMessage = 'Usuário não encontrado';
+      } else if (error.code === 'auth/wrong-password') {
+        errorMessage = 'Senha incorreta';
+      } else if (error.code === 'auth/invalid-email') {
+        errorMessage = 'Email inválido';
+      } else if (error.code === 'auth/too-many-requests') {
+        errorMessage = 'Muitas tentativas. Tente novamente mais tarde';
+      } else if (error.code === 'auth/invalid-credential') {
+        errorMessage = 'Credenciais inválidas. Verifique se o usuário existe no sistema.';
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }

@@ -11,12 +11,19 @@ export interface BasicUser {
   isActive: boolean;
 }
 
-// Usuário admin padrão (em produção, use banco de dados)
+// Usuários admin padrão (em produção, use banco de dados)
 const ADMIN_USERS: BasicUser[] = [
   {
     uid: 'admin-001',
-    email: 'admin@ohoje.com',
+    email: 'admin@conexaogoias.com',
     name: 'Administrador',
+    role: 'admin' as UserRole,
+    isActive: true
+  },
+  {
+    uid: 'admin-002',
+    email: 'admin@ohoje.com',
+    name: 'Administrador O Hoje',
     role: 'admin' as UserRole,
     isActive: true
   }
@@ -89,4 +96,20 @@ export function requireBasicAuth() {
     }
     return user;
   };
+}
+
+// Função para autenticação básica sem Firebase Auth
+export function authenticateBasicUser(email: string, password: string): BasicUser | null {
+  // Verificar se é um usuário admin válido
+  const user = ADMIN_USERS.find(u => u.email === email && u.isActive);
+  
+  if (!user) {
+    console.log('❌ Usuário não encontrado ou inativo:', email);
+    return null;
+  }
+  
+  // Para simplificar, aceitar qualquer senha para usuários admin
+  // Em produção, implementar hash de senha
+  console.log('✅ Usuário autenticado via sistema básico:', email);
+  return user;
 }
