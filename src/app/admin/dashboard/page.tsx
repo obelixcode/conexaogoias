@@ -66,7 +66,7 @@ function StatsCard({ title, value, description, icon: Icon, trend }: StatsCardPr
 
 function DashboardContent() {
   const { settings } = useSettingsContext();
-  const { user } = useUser();
+  const { user, isLoading } = useUser();
   const router = useRouter();
 
   // Todos os hooks devem ser chamados antes de qualquer return condicional
@@ -100,11 +100,11 @@ function DashboardContent() {
 
   // Verificar se o usuário está autenticado
   useEffect(() => {
-    if (!user) {
+    if (!isLoading && !user) {
       console.log('🔒 Usuário não autenticado - redirecionando para login');
       router.push('/admin/login');
     }
-  }, [user, router]);
+  }, [user, isLoading, router]);
 
   const loadStats = async () => {
     try {
@@ -141,12 +141,25 @@ function DashboardContent() {
     loadStats();
   }, []);
 
-  // Se não há usuário, mostrar loading e redirecionar
-  if (!user) {
+  // Se está carregando, mostrar loading
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-2 text-gray-600">Carregando dashboard...</p>
+          <p className="mt-1 text-sm text-gray-500">Preparando interface...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Se não há usuário após carregar, redirecionar
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600 mx-auto"></div>
           <p className="mt-2 text-gray-600">Verificando autenticação...</p>
           <p className="mt-1 text-sm text-red-600">Redirecionando para login...</p>
         </div>

@@ -28,7 +28,18 @@ export function UserProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    refreshUser().finally(() => setIsLoading(false));
+    const loadUser = async () => {
+      try {
+        await refreshUser();
+      } catch (error) {
+        console.error('Error loading user:', error);
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadUser();
   }, []);
 
   return (
