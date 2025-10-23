@@ -22,15 +22,20 @@ export default function AdminLoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [isRedirecting, setIsRedirecting] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
   const currentYear = getCurrentYear();
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Evitar múltiplos envios
-    if (isLoading || isRedirecting) {
+    // Evitar múltiplos envios e garantir que está montado
+    if (isLoading || isRedirecting || !isMounted) {
       return;
     }
     
@@ -53,9 +58,11 @@ export default function AdminLoginPage() {
         console.log('🔄 Redirecionando para dashboard...');
         
         setIsRedirecting(true);
-        // Pequeno delay para garantir que a sessão seja processada
+        // Usar window.location.href para evitar problemas de hidratação
         setTimeout(() => {
-          router.replace('/admin/dashboard');
+          if (isMounted) {
+            window.location.href = '/admin/dashboard';
+          }
         }, 100);
         return;
       }
@@ -85,9 +92,11 @@ export default function AdminLoginPage() {
       }
       
       setIsRedirecting(true);
-      // Pequeno delay para garantir que a sessão seja processada
+      // Usar window.location.href para evitar problemas de hidratação
       setTimeout(() => {
-        router.replace('/admin/dashboard');
+        if (isMounted) {
+          window.location.href = '/admin/dashboard';
+        }
       }, 100);
     } catch (error: any) {
       console.error('❌ Erro no login:', error);
@@ -127,6 +136,25 @@ export default function AdminLoginPage() {
     }));
   };
 
+
+  // Evitar problemas de hidratação - renderizar apenas quando montado
+  if (!isMounted) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full space-y-8">
+          <div className="text-center">
+            <div className="text-4xl font-bold">
+              <span className="text-blue-900">CONEXÃO GOIÁS</span>
+              <span className="text-gray-500 text-lg">.com</span>
+            </div>
+            <h2 className="mt-6 text-3xl font-bold text-gray-900">
+              Carregando...
+            </h2>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
