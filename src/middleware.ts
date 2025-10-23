@@ -14,7 +14,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/admin/dashboard', request.url));
   }
   
-  return NextResponse.next();
+  // Add pathname to headers for layout to use
+  const response = NextResponse.next();
+  response.headers.set('x-pathname', request.nextUrl.pathname);
+  
+  return response;
 }
 
 export const config = {

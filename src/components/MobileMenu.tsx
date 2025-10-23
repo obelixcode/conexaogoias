@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { 
   X, 
   Home, 
@@ -111,14 +110,14 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               {menuItems.map((item) => (
                 <div key={item.id}>
                   {item.href ? (
-                    <Link
+                    <a
                       href={item.href}
                       className="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
                       onClick={onClose}
                     >
                       <item.icon className="h-5 w-5" />
                       <span className="font-medium">{item.label}</span>
-                    </Link>
+                    </a>
                   ) : (
                     <div>
                       <button
@@ -139,14 +138,14 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                       {expandedItems.includes(item.id) && item.children && (
                         <div className="ml-8 mt-2 space-y-1">
                           {item.children.map((child, index) => (
-                            <Link
+                            <a
                               key={index}
                               href={child.href}
                               className="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
                               onClick={onClose}
                             >
                               {child.label}
-                            </Link>
+                            </a>
                           ))}
                         </div>
                       )}

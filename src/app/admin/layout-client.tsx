@@ -6,9 +6,11 @@ import { WordPressTopBar } from '@/components/admin/WordPressTopBar';
 import { WordPressSidebar } from '@/components/admin/WordPressSidebar';
 import { AdminService } from '@/lib/adminService';
 
+import { AuthUser } from '@/types/user';
+
 interface AdminLayoutClientProps {
   children: React.ReactNode;
-  user: any;
+  user: AuthUser | null;
 }
 
 export default function AdminLayoutClient({ children, user }: AdminLayoutClientProps) {
@@ -22,7 +24,7 @@ export default function AdminLayoutClient({ children, user }: AdminLayoutClientP
   const handleLogout = async () => {
     try {
       await AdminService.logout();
-      router.push('/admin/login');
+      window.location.href = '/admin/login';
     } catch (error) {
       console.error('Logout error:', error);
     }

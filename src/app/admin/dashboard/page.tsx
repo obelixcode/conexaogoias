@@ -1,7 +1,6 @@
 'use client';
 
 import { Suspense, useState, useEffect } from 'react';
-import Link from 'next/link';
 import { 
   FileText, 
   Eye, 
@@ -138,10 +137,10 @@ function DashboardContent() {
           <p className="text-gray-600">Visão geral do {settings.siteDescription.toLowerCase()}</p>
         </div>
         <WordPressButton asChild>
-          <Link href="/admin/editor" className="flex items-center">
+          <a href="/admin/editor" className="flex items-center">
             <Plus className="h-4 w-4 mr-2" />
             Nova Notícia
-          </Link>
+          </a>
         </WordPressButton>
       </div>
 
@@ -269,41 +268,38 @@ function DashboardContent() {
       {/* Quick Actions */}
       <WordPressCard title="Ações Rápidas" description="Acesso rápido às principais funcionalidades">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Link
+          <a
             href="/admin/editor"
             className="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-            prefetch={false}
           >
             <FileText className="h-6 w-6 text-blue-600" />
             <div>
               <h3 className="font-medium">Nova Notícia</h3>
               <p className="text-sm text-gray-500">Criar uma nova matéria</p>
             </div>
-          </Link>
+          </a>
           
-          <Link
+          <a
             href="/admin/posts/categories"
             className="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-            prefetch={false}
           >
             <FolderOpen className="h-6 w-6 text-green-600" />
             <div>
               <h3 className="font-medium">Gerenciar Categorias</h3>
               <p className="text-sm text-gray-500">Organizar categorias</p>
             </div>
-          </Link>
+          </a>
           
-          <Link
+          <a
             href="/admin/banners"
             className="flex items-center space-x-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-            prefetch={false}
           >
             <BarChart3 className="h-6 w-6 text-purple-600" />
             <div>
               <h3 className="font-medium">Gerenciar Banners</h3>
               <p className="text-sm text-gray-500">Configurar publicidade</p>
             </div>
-          </Link>
+          </a>
         </div>
       </WordPressCard>
 

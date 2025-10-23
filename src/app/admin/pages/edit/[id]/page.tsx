@@ -186,7 +186,7 @@ export default function EditPagePage() {
       await pageService.updatePage(updateData);
       
       // Redirecionar para a lista de páginas
-      router.push('/admin/pages');
+      window.location.href = '/admin/pages';
     } catch (error) {
       console.error('Erro ao salvar página:', error);
       setErrors(prev => ({ ...prev, general: 'Erro ao salvar página. Tente novamente.' }));
@@ -273,7 +273,7 @@ export default function EditPagePage() {
             <p className="text-gray-500 mb-4">
               A página que você está tentando editar não existe ou foi removida.
             </p>
-            <WordPressButton onClick={() => router.push('/admin/pages')}>
+            <WordPressButton onClick={() => window.location.href = '/admin/pages'}>
               Voltar para Lista de Páginas
             </WordPressButton>
           </div>

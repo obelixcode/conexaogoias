@@ -12,7 +12,7 @@ const USERS_COLLECTION = 'users';
 
 export class AdminService {
   // Login admin user
-  static async login(credentials: LoginCredentials): Promise<AuthUser> {
+  static async login(credentials: LoginCredentials): Promise<{ user: AuthUser; idToken: string }> {
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth, 
@@ -21,6 +21,7 @@ export class AdminService {
       );
       
       const user = userCredential.user;
+      const idToken = await user.getIdToken();
       
       // Get user data from Firestore
       const userDoc = await getDoc(doc(db, USERS_COLLECTION, user.uid));
@@ -41,12 +42,15 @@ export class AdminService {
       });
       
       return {
-        uid: user.uid,
-        email: user.email!,
-        name: userData.name,
-        role: userData.role,
-        isActive: userData.isActive,
-        avatar: userData.avatar
+        user: {
+          uid: user.uid,
+          email: user.email!,
+          name: userData.name,
+          role: userData.role,
+          isActive: userData.isActive,
+          avatar: userData.avatar
+        },
+        idToken
       };
     } catch (error) {
       console.error('Login error:', error);

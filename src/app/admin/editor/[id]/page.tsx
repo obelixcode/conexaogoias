@@ -88,7 +88,7 @@ export default function EditorPage({ params }: EditorPageProps) {
 
         if (!newsData) {
           alert('Notícia não encontrada');
-          router.push('/admin/editor');
+          window.location.href = '/admin/editor';
           return;
         }
 
@@ -170,7 +170,7 @@ export default function EditorPage({ params }: EditorPageProps) {
     try {
       await NewsService.deleteNews(resolvedParams.id);
       alert('Notícia excluída com sucesso!');
-      router.push('/admin/editor');
+      window.location.href = '/admin/editor';
     } catch (error) {
       console.error('Error deleting news:', error);
       alert('Erro ao excluir notícia');
@@ -226,7 +226,7 @@ export default function EditorPage({ params }: EditorPageProps) {
       <div className="text-center py-12">
         <h1 className="text-2xl font-bold text-gray-900 mb-4">Notícia não encontrada</h1>
         <p className="text-gray-600 mb-6">A notícia que você está procurando não existe.</p>
-        <Button onClick={() => router.push('/admin/editor')}>
+        <Button onClick={() => window.location.href = '/admin/editor'}>
           Voltar para Editor
         </Button>
       </div>

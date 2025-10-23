@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import Image from 'next/image';
 import { CategoryHighlight, HighlightPost } from '@/types/category';
 
@@ -53,7 +52,7 @@ export function CategoryHighlights({ highlights }: CategoryHighlightsProps) {
             {/* Mobile: Mostrar todos os posts de uma categoria */}
             <div className="lg:hidden">
               {category.posts.map((post) => (
-                <Link
+                <a
                   key={`${category.id}-${post.id}`}
                   href={`/noticia/${post.slug}`}
                   className="group block bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-200 mb-4"
@@ -86,7 +85,7 @@ export function CategoryHighlights({ highlights }: CategoryHighlightsProps) {
                       {post.title}
                     </h4>
                   </div>
-                </Link>
+                </a>
               ))}
             </div>
 
@@ -100,7 +99,7 @@ export function CategoryHighlights({ highlights }: CategoryHighlightsProps) {
                 }
 
                 return (
-                  <Link
+                  <a
                     key={`${category.id}-${post.id}`}
                     href={`/noticia/${post.slug}`}
                     className="group block bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-200 mb-4"
@@ -133,7 +132,7 @@ export function CategoryHighlights({ highlights }: CategoryHighlightsProps) {
                         {post.title}
                       </h4>
                     </div>
-                  </Link>
+                  </a>
                 );
               })}
             </div>

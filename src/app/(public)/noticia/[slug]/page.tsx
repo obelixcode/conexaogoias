@@ -3,7 +3,6 @@ import { Metadata } from 'next';
 import { SettingsService } from '@/lib/settingsService';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
 import { ArrowLeft, Share2, Eye, Calendar, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { NewsService } from '@/lib/newsService';
@@ -100,25 +99,25 @@ async function NewsPageContent({ slug }: { slug: string }) {
     <article className="max-w-4xl mx-auto">
       {/* Back button */}
       <div className="mb-6">
-        <Link href="/">
+        <a href="/">
           <Button variant="outline" size="sm" className="flex items-center space-x-2">
             <ArrowLeft className="h-4 w-4" />
             <span>Voltar</span>
           </Button>
-        </Link>
+        </a>
       </div>
 
       {/* Article header */}
       <header className="mb-8">
         {/* Category */}
         <div className="mb-4">
-          <Link
+          <a
             href={`/categoria/${news.category.slug}`}
             className="inline-block px-3 py-1 rounded-full text-sm font-medium text-white"
             style={{ backgroundColor: news.category.color }}
           >
             {news.category.name}
-          </Link>
+          </a>
         </div>
 
         {/* Title */}

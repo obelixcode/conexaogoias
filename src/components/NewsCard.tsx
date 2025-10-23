@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import Image from 'next/image';
 import { formatNewsDate } from '@/utils/formatDate';
 import { NewsWithCategory } from '@/types';
@@ -37,7 +36,7 @@ export function NewsCard({
 
   if (variant === 'compact') {
     return (
-      <Link href={news.slug ? `/noticia/${news.slug}` : '#'} className={`${baseClasses} ${className}`} prefetch={false}>
+      <a href={news.slug ? `/noticia/${news.slug}` : '#'} className={`${baseClasses} ${className}`}>
         <div className="flex space-x-3 p-3">
           <div className="shrink-0">
             <div className="relative w-20 h-16 rounded-md overflow-hidden">
@@ -65,12 +64,12 @@ export function NewsCard({
             </p>
           </div>
         </div>
-      </Link>
+      </a>
     );
   }
 
   return (
-    <Link href={news.slug ? `/noticia/${news.slug}` : '#'} className={`${baseClasses} ${variantClasses[variant]} ${className}`} prefetch={false}>
+    <a href={news.slug ? `/noticia/${news.slug}` : '#'} className={`${baseClasses} ${variantClasses[variant]} ${className}`}>
       <div className="relative">
         <div className="relative w-full h-48 overflow-hidden">
           {news.coverImage ? (
@@ -117,6 +116,6 @@ export function NewsCard({
           </div>
         </div>
       </div>
-    </Link>
+      </a>
   );
 }

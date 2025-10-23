@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getAuthUser } from '@/lib/auth-utils';
-import AdminLayoutClient from './layout';
+import AdminLayoutClient from './layout-client';
 
 interface AdminLayoutServerProps {
   children: React.ReactNode;

@@ -3,7 +3,6 @@ import { Banner } from '@/types/banner';
 import { NewsCard } from './NewsCard';
 import { BannerDisplay } from './BannerDisplay';
 import { NewsletterSubscription } from './NewsletterSubscription';
-import Link from 'next/link';
 
 interface SidebarProps {
   recentNews?: NewsWithCategory[];
@@ -27,11 +26,11 @@ export function Sidebar({ recentNews = [], mostReadNews = [], banners = [], clas
                 {index + 1}
               </div>
               <div className="flex-1 min-w-0">
-                <Link href={`/noticia/${news.slug}`}>
+                <a href={`/noticia/${news.slug}`}>
                   <h4 className="text-sm font-medium text-gray-900 line-clamp-2 hover:text-blue-900 transition-colors cursor-pointer">
                     {news.title}
                   </h4>
-                </Link>
+                </a>
                 <div className="flex items-center space-x-2 mt-1">
                   <span className="text-xs text-gray-500">{news.views || 0} visualizações</span>
                 </div>

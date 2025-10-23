@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Calendar, Eye, Tag, Search } from 'lucide-react';
-import Link from 'next/link';
 import Image from 'next/image';
 import { NewsService } from '@/lib/newsService';
 import { NewsWithCategory } from '@/types';
@@ -11,7 +10,7 @@ import { formatDate } from '@/utils/formatDate';
 import { extractTextFromHtml } from '@/utils';
 import { NewsListSkeleton } from '@/components/LoadingSkeleton';
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams();
   const query = searchParams.get('q') || '';
   
@@ -106,9 +105,9 @@ export default function SearchPage() {
                           
                           {/* Title */}
                           <h2 className="text-xl font-bold text-gray-900 mb-2 hover:text-blue-600 transition-colors">
-                            <Link href={`/noticia/${news.slug}`}>
+                            <a href={`/noticia/${news.slug}`}>
                               {news.title}
-                            </Link>
+                            </a>
                           </h2>
                           
                           {/* Subtitle */}
@@ -184,5 +183,13 @@ export default function SearchPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<NewsListSkeleton />}>
+      <SearchContent />
+    </Suspense>
   );
 }

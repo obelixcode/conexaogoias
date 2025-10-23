@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Checkbox } from '@/components/ui/checkbox';
 import { Check, Mail, AlertCircle } from 'lucide-react';
 import { newsletterService } from '@/lib/services/NewsletterService';
+import { ClientOnly } from '@/components/ClientOnly';
 
 interface NewsletterSubscriptionProps {
   className?: string;
@@ -108,32 +109,44 @@ export function NewsletterSubscription({ className = '' }: NewsletterSubscriptio
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="relative group">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <Mail className="h-5 w-5 text-blue-300 group-focus-within:text-blue-200 transition-colors" />
+        <ClientOnly fallback={
+          <div className="space-y-4">
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Mail className="h-5 w-5 text-blue-300" />
+              </div>
+              <div className="w-full pl-12 pr-4 py-4 rounded-xl text-gray-900 text-base border-2 border-white/20 bg-white/95 h-14 animate-pulse"></div>
             </div>
-            <Input
-              type="email"
-              placeholder="Digite seu melhor e-mail"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 rounded-xl text-gray-900 text-base border-2 border-white/20 bg-white/95 focus:bg-white focus:border-blue-300 focus:ring-4 focus:ring-blue-300/20 transition-all duration-200 placeholder:text-gray-500"
-              required
-            />
+            <div className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold py-4 px-6 rounded-xl h-14 animate-pulse"></div>
           </div>
-          
-          <Button 
-            type="submit"
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-            disabled={!email.trim()}
-          >
-            <span className="flex items-center justify-center space-x-2">
-              <span>Inscrever-se</span>
-              <Check className="h-4 w-4" />
-            </span>
-          </Button>
-        </form>
+        }>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <Mail className="h-5 w-5 text-blue-300 group-focus-within:text-blue-200 transition-colors" />
+              </div>
+              <Input
+                type="email"
+                placeholder="Digite seu melhor e-mail"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full pl-12 pr-4 py-4 rounded-xl text-gray-900 text-base border-2 border-white/20 bg-white/95 focus:bg-white focus:border-blue-300 focus:ring-4 focus:ring-blue-300/20 transition-all duration-200 placeholder:text-gray-500"
+                required
+              />
+            </div>
+            
+            <Button 
+              type="submit"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              disabled={!email.trim()}
+            >
+              <span className="flex items-center justify-center space-x-2">
+                <span>Inscrever-se</span>
+                <Check className="h-4 w-4" />
+              </span>
+            </Button>
+          </form>
+        </ClientOnly>
 
         {/* Trust Indicators */}
         <div className="mt-6 pt-4 border-t border-white/10">

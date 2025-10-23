@@ -18,37 +18,41 @@ function DynamicFaviconContent() {
     let link: HTMLElement | null = null;
     let appleLink: HTMLElement | null = null;
 
-    try {
-      // Remove existing favicon links com verificação de segurança
-      safeRemoveElements('link[rel*="icon"]');
+    // Usar setTimeout para garantir que a hidratação seja concluída
+    const timer = setTimeout(() => {
+      try {
+        // Remove existing favicon links com verificação de segurança
+        safeRemoveElements('link[rel*="icon"]');
 
-      // Create new favicon link
-      link = safeCreateElement('link', {
-        rel: 'icon',
-        type: 'image/x-icon',
-        href: settings.faviconUrl
-      });
-      
-      // Add to head
-      if (link && document.head) {
-        safeAppendChild(document.head, link);
-      }
+        // Create new favicon link
+        link = safeCreateElement('link', {
+          rel: 'icon',
+          type: 'image/x-icon',
+          href: settings.faviconUrl
+        });
+        
+        // Add to head
+        if (link && document.head) {
+          safeAppendChild(document.head, link);
+        }
 
-      // Also add apple-touch-icon for mobile
-      appleLink = safeCreateElement('link', {
-        rel: 'apple-touch-icon',
-        href: settings.faviconUrl
-      });
-      
-      if (appleLink && document.head) {
-        safeAppendChild(document.head, appleLink);
+        // Also add apple-touch-icon for mobile
+        appleLink = safeCreateElement('link', {
+          rel: 'apple-touch-icon',
+          href: settings.faviconUrl
+        });
+        
+        if (appleLink && document.head) {
+          safeAppendChild(document.head, appleLink);
+        }
+      } catch (error) {
+        console.warn('Error updating favicon:', error);
       }
-    } catch (error) {
-      console.warn('Error updating favicon:', error);
-    }
+    }, 100);
 
     // Cleanup function
     return () => {
+      clearTimeout(timer);
       safeRemoveElement(link);
       safeRemoveElement(appleLink);
     };

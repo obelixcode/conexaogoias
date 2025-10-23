@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { NewsWithCategory, Category } from '@/types';
 import { NewsCard } from './NewsCard';
 import { getCategoryColorClass } from '@/utils';
@@ -35,12 +34,12 @@ export function CategorySection({
         </div>
         
         {showViewAll && (
-          <Link
+          <a
             href={`/categoria/${category.slug}`}
             className="text-sm font-medium text-gray-600 hover:text-blue-900 transition-colors"
           >
             Ver todas →
-          </Link>
+          </a>
         )}
       </div>
 

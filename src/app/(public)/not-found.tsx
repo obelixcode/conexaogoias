@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Home, ArrowLeft, Search } from 'lucide-react';
@@ -10,7 +9,11 @@ export default function NotFound() {
 
   const handleGoBack = () => {
     if (typeof window !== 'undefined') {
-      window.history.back();
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        router.push('/');
+      }
     } else {
       router.push('/');
     }
@@ -32,10 +35,10 @@ export default function NotFound() {
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild>
-              <Link href="/" className="flex items-center">
+              <a href="/" className="flex items-center">
                 <Home className="h-4 w-4 mr-2" />
                 Ir para Home
-              </Link>
+              </a>
             </Button>
             
             <Button variant="outline" onClick={handleGoBack}>

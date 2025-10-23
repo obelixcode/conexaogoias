@@ -7,7 +7,7 @@ Portal de notícias moderno e completo com painel administrativo idêntico ao Wo
 - **Frontend**: Next.js 14 (App Router), TypeScript, TailwindCSS, shadcn/ui
 - **Backend**: Firebase (Auth, Firestore, Storage)
 - **Editor**: Tiptap (editor de texto rico)
-- **Deploy**: Vercel (frontend) + Firebase Hosting
+- **Deploy**: VPS (Digital Ocean) + Firebase (Backend)
 
 ## 📋 Funcionalidades
 

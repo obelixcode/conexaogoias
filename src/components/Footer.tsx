@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { Facebook, Twitter, Instagram, Youtube, MessageCircle } from 'lucide-react';
 import { getCurrentYear } from '@/utils/dateUtils';
 import { SiteSettings, DEFAULT_SETTINGS } from '@/types/settings';
@@ -100,34 +99,34 @@ export function Footer({ footerPages = [], settings }: FooterProps) {
             <h3 className="text-lg font-semibold mb-4">Links Rápidos</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/" className="text-gray-300 hover:text-white transition-colors" prefetch={false}>
+                <a href="/" className="text-gray-300 hover:text-white transition-colors" >
                   Últimas notícias
-                </Link>
+                </a>
               </li>
               <li>
-                <Link href="/categoria/politica" className="text-gray-300 hover:text-white transition-colors" prefetch={false}>
+                <a href="/categoria/politica" className="text-gray-300 hover:text-white transition-colors" >
                   Política
-                </Link>
+                </a>
               </li>
               <li>
-                <Link href="/categoria/cidades" className="text-gray-300 hover:text-white transition-colors" prefetch={false}>
+                <a href="/categoria/cidades" className="text-gray-300 hover:text-white transition-colors" >
                   Cidades
-                </Link>
+                </a>
               </li>
               <li>
-                <Link href="/categoria/esportes" className="text-gray-300 hover:text-white transition-colors" prefetch={false}>
+                <a href="/categoria/esportes" className="text-gray-300 hover:text-white transition-colors" >
                   Esportes
-                </Link>
+                </a>
               </li>
               <li>
-                <Link href="/categoria/economia" className="text-gray-300 hover:text-white transition-colors" prefetch={false}>
+                <a href="/categoria/economia" className="text-gray-300 hover:text-white transition-colors" >
                   Economia
-                </Link>
+                </a>
               </li>
               <li>
-                <Link href="/categoria/tecnologia" className="text-gray-300 hover:text-white transition-colors" prefetch={false}>
+                <a href="/categoria/tecnologia" className="text-gray-300 hover:text-white transition-colors" >
                   Tecnologia
-                </Link>
+                </a>
               </li>
             </ul>
           </div>
@@ -139,13 +138,12 @@ export function Footer({ footerPages = [], settings }: FooterProps) {
               {footerPages.length > 0 ? (
                 footerPages.map((page) => (
                   <li key={`${page.id}-${Date.now()}`}>
-                    <Link 
+                    <a 
                       href={`/pagina/${page.slug}`} 
                       className="text-gray-300 hover:text-white transition-colors"
-                      prefetch={false}
                     >
                       {page.title}
-                    </Link>
+                    </a>
                   </li>
                 ))
               ) : (
@@ -196,12 +194,12 @@ export function Footer({ footerPages = [], settings }: FooterProps) {
               Copyright © {safeSettings.foundingYear} - {currentYear} | {safeSettings.siteName} - Todos os direitos reservados.
             </div>
             <div className="flex items-center space-x-4 text-sm">
-              <Link href="/rss" className="text-gray-300 hover:text-white transition-colors" prefetch={false}>
+              <a href="/rss" className="text-gray-300 hover:text-white transition-colors" >
                 RSS Feed
-              </Link>
-              <Link href="/sitemap.xml" className="text-gray-300 hover:text-white transition-colors" prefetch={false}>
+              </a>
+              <a href="/sitemap.xml" className="text-gray-300 hover:text-white transition-colors" >
                 Mapa do Site
-              </Link>
+              </a>
             </div>
           </div>
         </div>

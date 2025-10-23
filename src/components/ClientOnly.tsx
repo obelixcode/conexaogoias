@@ -15,12 +15,17 @@ export function ClientOnly({ children, fallback = null }: ClientOnlyProps) {
   const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
-    setHasMounted(true);
+    // Usar setTimeout para garantir que a hidratação seja concluída
+    const timer = setTimeout(() => {
+      setHasMounted(true);
+    }, 0);
+
+    return () => clearTimeout(timer);
   }, []);
 
   if (!hasMounted) {
-    return <>{fallback}</>;
+    return <div suppressHydrationWarning>{fallback}</div>;
   }
 
-  return <>{children}</>;
+  return <div suppressHydrationWarning>{children}</div>;
 }

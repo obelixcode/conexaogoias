@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -32,7 +31,7 @@ export default function AdminLoginPage() {
     setError('');
 
     try {
-      const user = await AdminService.login(credentials);
+      const { user, idToken } = await AdminService.login(credentials);
       
       // Criar session cookie via API
       const response = await fetch('/api/auth/session', {
@@ -40,14 +39,14 @@ export default function AdminLoginPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ idToken: user.idToken }),
+        body: JSON.stringify({ idToken }),
       });
 
       if (!response.ok) {
         throw new Error('Erro ao criar sessão');
       }
       
-      router.push('/admin/dashboard');
+      window.location.href = '/admin/dashboard';
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Erro ao fazer login');
     } finally {
@@ -70,12 +69,12 @@ export default function AdminLoginPage() {
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <Link href="/" className="inline-block">
+          <a href="/" className="inline-block">
             <div className="text-4xl font-bold">
               <span className="text-blue-900">{siteName.toUpperCase()}</span>
               <span className="text-gray-500 text-lg">.com</span>
             </div>
-          </Link>
+          </a>
           <h2 className="mt-6 text-3xl font-bold text-gray-900">
             Painel Administrativo
           </h2>
@@ -149,12 +148,12 @@ export default function AdminLoginPage() {
             </form>
 
             <div className="mt-6 text-center">
-              <Link
+              <a
                 href="/"
                 className="text-sm text-blue-600 hover:text-blue-500"
               >
                 ← Voltar ao site
-              </Link>
+              </a>
             </div>
           </CardContent>
         </Card>

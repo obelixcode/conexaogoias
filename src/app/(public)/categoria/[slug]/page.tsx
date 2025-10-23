@@ -2,7 +2,6 @@ import { Suspense } from 'react';
 import { Metadata } from 'next';
 import { SettingsService } from '@/lib/settingsService';
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
 import { ArrowLeft, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -88,12 +87,12 @@ async function CategoryPageContent({
     <div className="max-w-6xl mx-auto">
       {/* Back button */}
       <div className="mb-6">
-        <Link href="/">
+        <a href="/">
           <Button variant="outline" size="sm" className="flex items-center space-x-2">
             <ArrowLeft className="h-4 w-4" />
             <span>Voltar</span>
           </Button>
-        </Link>
+        </a>
       </div>
 
       {/* Category header */}
@@ -170,9 +169,9 @@ async function CategoryPageContent({
                 disabled={!pagination.hasPrev}
                 asChild
               >
-                <Link href={`/categoria/${slug}?page=${page - 1}&sort=${sortBy}`}>
+                <a href={`/categoria/${slug}?page=${page - 1}&sort=${sortBy}`}>
                   Anterior
-                </Link>
+                </a>
               </Button>
               
               <div className="flex items-center space-x-2">
@@ -185,9 +184,9 @@ async function CategoryPageContent({
                       size="sm"
                       asChild
                     >
-                      <Link href={`/categoria/${slug}?page=${pageNum}&sort=${sortBy}`}>
+                      <a href={`/categoria/${slug}?page=${pageNum}&sort=${sortBy}`}>
                         {pageNum}
-                      </Link>
+                      </a>
                     </Button>
                   );
                 })}
@@ -198,9 +197,9 @@ async function CategoryPageContent({
                 disabled={!pagination.hasNext}
                 asChild
               >
-                <Link href={`/categoria/${slug}?page=${page + 1}&sort=${sortBy}`}>
+                <a href={`/categoria/${slug}?page=${page + 1}&sort=${sortBy}`}>
                   Próxima
-                </Link>
+                </a>
               </Button>
             </div>
           )}

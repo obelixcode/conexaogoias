@@ -74,7 +74,7 @@ export default function EditRoadmapPage({ params }: EditRoadmapPageProps) {
 
         if (!requestData) {
           alert('Solicitação não encontrada');
-          router.push('/admin/roadmap');
+          window.location.href = '/admin/roadmap';
           return;
         }
 
@@ -134,7 +134,7 @@ export default function EditRoadmapPage({ params }: EditRoadmapPageProps) {
     try {
       await RoadmapService.deleteRequest(resolvedParams.id);
       alert('Solicitação excluída com sucesso!');
-      router.push('/admin/roadmap');
+      window.location.href = '/admin/roadmap';
     } catch (error) {
       console.error('Error deleting roadmap request:', error);
       alert('Erro ao excluir solicitação');
@@ -182,7 +182,7 @@ export default function EditRoadmapPage({ params }: EditRoadmapPageProps) {
       <div className="text-center py-12">
         <h1 className="text-2xl font-bold text-gray-900 mb-4">Solicitação não encontrada</h1>
         <p className="text-gray-600 mb-6">A solicitação que você está procurando não existe.</p>
-        <Button onClick={() => router.push('/admin/roadmap')}>
+        <Button onClick={() => window.location.href = '/admin/roadmap'}>
           Voltar para RoadMap
         </Button>
       </div>

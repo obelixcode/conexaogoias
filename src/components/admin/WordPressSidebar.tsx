@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { NewsService } from '@/lib/newsService';
 import { 
   LayoutDashboard, 
@@ -40,7 +40,6 @@ interface WordPressSidebarProps {
 export function WordPressSidebar({ isCollapsed, onToggleCollapse }: WordPressSidebarProps) {
   const { settings } = useSettingsContext();
   const pathname = usePathname();
-  const router = useRouter();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [newsCount, setNewsCount] = useState<number>(0);
 
@@ -167,10 +166,10 @@ export function WordPressSidebar({ isCollapsed, onToggleCollapse }: WordPressSid
   const handleNavigation = useCallback((href: string) => {
     if (href && href !== '#') {
       console.log('Navigating to:', href);
-      // Use Next.js router for client-side navigation
-      router.push(href);
+      // Force page refresh to avoid hydration issues
+      window.location.href = href;
     }
-  }, [router]);
+  }, []);
 
   const isItemActive = (item: MenuItem): boolean => {
     if (item.href) {

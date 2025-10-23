@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import { Menu, X, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Category } from '@/types';
 import { useSettingsContext } from '@/contexts/SettingsContext';
 import { getCurrentDateFormatted } from '@/utils/dateUtils';
+import { ClientOnly } from '@/components/ClientOnly';
 
 interface HeaderProps {
   categories: Category[];
@@ -17,7 +17,11 @@ export function Header({ categories }: HeaderProps) {
   const { settings } = useSettingsContext();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const currentDate = getCurrentDateFormatted();
+  const [currentDate, setCurrentDate] = useState('');
+
+  useEffect(() => {
+    setCurrentDate(getCurrentDateFormatted());
+  }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +36,9 @@ export function Header({ categories }: HeaderProps) {
       {/* Top bar */}
       <div className="bg-blue-900 text-white text-sm py-1">
         <div className="container mx-auto px-4 flex justify-center items-center">
-          <span>{currentDate}</span>
+          <ClientOnly fallback={<span>Carregando...</span>}>
+            <span>{currentDate}</span>
+          </ClientOnly>
         </div>
       </div>
 
@@ -40,7 +46,7 @@ export function Header({ categories }: HeaderProps) {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2" prefetch={false}>
+          <a href="/" className="flex items-center space-x-2">
             {settings.logoUrl ? (
               <img 
                 src={settings.logoUrl} 
@@ -53,20 +59,19 @@ export function Header({ categories }: HeaderProps) {
                 <span className="text-gray-500 text-lg">.com</span>
               </div>
             )}
-          </Link>
+          </a>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
             {categories && categories.length > 0 ? categories.map((category) => (
-              <Link
+              <a
                 key={category.id}
                 href={`/categoria/${category.slug}`}
                 className="font-medium transition-colors hover:opacity-80"
                 style={{ color: category.color }}
-                prefetch={false}
               >
                 {category.name.toUpperCase()}
-              </Link>
+              </a>
             )) : null}
           </nav>
 
@@ -132,7 +137,7 @@ export function Header({ categories }: HeaderProps) {
             {/* Mobile Navigation */}
             <nav className="space-y-2">
               {categories && categories.length > 0 ? categories.map((category) => (
-                <Link
+                <a
                   key={category.id}
                   href={`/categoria/${category.slug}`}
                   className="block py-2 font-medium transition-colors hover:opacity-80"
@@ -140,7 +145,7 @@ export function Header({ categories }: HeaderProps) {
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {category.name.toUpperCase()}
-                </Link>
+                </a>
               )) : null}
             </nav>
           </div>
