@@ -43,7 +43,8 @@ export default function AdminLoginPage() {
       if (basicResponse.ok) {
         const basicData = await basicResponse.json();
         console.log('✅ Login via sistema básico bem-sucedido');
-        router.push('/admin/dashboard');
+        console.log('🔄 Redirecionando para dashboard...');
+        window.location.href = '/admin/dashboard';
         return;
       }
 

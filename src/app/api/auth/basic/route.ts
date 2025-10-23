@@ -25,6 +25,7 @@ export async function POST(request: NextRequest) {
     
     // Criar sessão
     const sessionToken = createBasicSession(user);
+    console.log('🔧 Sessão criada para:', user.email);
     
     // Definir cookie de sessão
     const cookieStore = await cookies();
@@ -35,6 +36,7 @@ export async function POST(request: NextRequest) {
       maxAge: 24 * 60 * 60, // 24 horas
       path: '/'
     });
+    console.log('✅ Cookie de sessão definido');
     
     return NextResponse.json({
       success: true,
