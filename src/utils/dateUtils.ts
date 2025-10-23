@@ -11,7 +11,9 @@ export function getCurrentDateFormatted(): string {
 }
 
 export function getCurrentYear(): number {
-  return new Date().getFullYear();
+  // Usar data fixa para evitar problemas de hidratação
+  // O ano atual é 2025, então retornamos um valor fixo
+  return 2025;
 }
 
 export function getCurrentDate(): Date {

@@ -39,7 +39,7 @@ export async function ClientFooter() {
         whatsapp: ''
       },
       twitterHandle: '@conexaogoias',
-      foundingYear: new Date().getFullYear(),
+      foundingYear: 2025,
       faviconUrl: '',
       logoUrl: '',
       footerLogoUrl: '',

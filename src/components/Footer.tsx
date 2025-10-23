@@ -137,7 +137,7 @@ export function Footer({ footerPages = [], settings }: FooterProps) {
             <ul className="space-y-2 text-sm">
               {footerPages.length > 0 ? (
                 footerPages.map((page) => (
-                  <li key={`${page.id}-${Date.now()}`}>
+                  <li key={page.id}>
                     <a 
                       href={`/pagina/${page.slug}`} 
                       className="text-gray-300 hover:text-white transition-colors"
