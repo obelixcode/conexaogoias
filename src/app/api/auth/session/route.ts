@@ -35,12 +35,15 @@ export async function POST(request: NextRequest) {
       
       // Configurar cookie
       const cookieStore = await cookies();
+      const isHttps = request.url.startsWith('https://');
+      
       cookieStore.set('__session', sessionData, {
         maxAge: 60 * 60 * 24, // 24 horas
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: isHttps, // Apenas HTTPS se a URL for HTTPS
         sameSite: 'lax',
         path: '/',
+        domain: process.env.NODE_ENV === 'production' ? undefined : undefined, // Permitir subdomínios em produção
       });
       
       console.log('✅ Sessão criada para:', payload.email);

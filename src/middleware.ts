@@ -6,7 +6,16 @@ export async function middleware(request: NextRequest) {
   const isAdminRoute = request.nextUrl.pathname.startsWith('/admin');
   const isLoginPage = request.nextUrl.pathname === '/admin/login';
   
-  // Logs removidos para reduzir ruído no console
+  // Debug logs para VPS
+  console.log('🔍 Middleware Debug:', {
+    path: request.nextUrl.pathname,
+    hasSession: !!session,
+    sessionLength: session?.length || 0,
+    isAdminRoute,
+    isLoginPage,
+    userAgent: request.headers.get('user-agent')?.substring(0, 50),
+    host: request.headers.get('host')
+  });
   
   // Se não é uma rota admin, permitir acesso
   if (!isAdminRoute) {
