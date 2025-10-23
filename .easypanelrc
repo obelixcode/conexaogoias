@@ -1,0 +1,15 @@
+{
+  "build": {
+    "command": "npm install --legacy-peer-deps && npm run build",
+    "directory": ".",
+    "output": ".next"
+  },
+  "start": {
+    "command": "npm start",
+    "directory": "."
+  },
+  "environment": {
+    "NODE_ENV": "production",
+    "PORT": "3000"
+  }
+}
