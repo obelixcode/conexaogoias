@@ -44,6 +44,10 @@ if [ ! -d "node_modules" ]; then
     npm install --legacy-peer-deps --no-optional
 fi
 
+# Instalar dependências específicas do Firebase Admin
+print_status "Verificando dependências do Firebase Admin..."
+npm install @google-cloud/firestore @google-cloud/storage --save
+
 # Limpar build anterior
 if [ -d ".next" ]; then
     print_status "Limpando build anterior..."
