@@ -1,0 +1,200 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Funções auxiliares para controle de acesso
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function getUserRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && getUserRole() == 'admin';
+    }
+    
+    function isEditor() {
+      return isAuthenticated() && getUserRole() in ['admin', 'editor'];
+    }
+    
+    function isUser() {
+      return isAuthenticated() && getUserRole() in ['admin', 'editor', 'user'];
+    }
+    
+    // Regras para usuários
+    match /users/{userId} {
+      // Usuário pode ler e escrever seu próprio documento
+      allow read, write: if isOwner(userId);
+      
+      // Admins podem ler todos os usuários
+      allow read: if isAdmin();
+      
+      // Admins podem criar/atualizar usuários
+      allow create, update: if isAdmin();
+      
+      // Usuários podem atualizar apenas seus próprios dados não-críticos
+      allow update: if isOwner(userId) && 
+        !('role' in request.resource.data.diff(resource.data).affectedKeys()) &&
+        !('isActive' in request.resource.data.diff(resource.data).affectedKeys());
+    }
+    
+    // Regras para notícias
+    match /news/{newsId} {
+      // Qualquer um pode ler notícias publicadas
+      allow read: if true;
+      
+      // Apenas editores podem criar/atualizar notícias
+      allow create, update: if isEditor();
+      
+      // Apenas admins podem deletar notícias
+      allow delete: if isAdmin();
+      
+      // Validação de dados obrigatórios
+      allow create: if isEditor() && 
+        'title' in request.resource.data &&
+        'content' in request.resource.data &&
+        'categoryId' in request.resource.data &&
+        'author' in request.resource.data;
+    }
+    
+    // Regras para categorias
+    match /categories/{categoryId} {
+      // Qualquer um pode ler categorias
+      allow read: if true;
+      
+      // Apenas editores podem criar/atualizar categorias
+      allow create, update: if isEditor();
+      
+      // Apenas admins podem deletar categorias
+      allow delete: if isAdmin();
+    }
+    
+    // Regras para tags
+    match /tags/{tagId} {
+      // Qualquer um pode ler tags
+      allow read: if true;
+      
+      // Usuários autenticados podem escrever (para desenvolvimento)
+      allow write: if request.auth != null;
+    }
+    
+    // Regras para biblioteca de mídia
+    match /media/{mediaId} {
+      // Qualquer um pode ler mídia
+      allow read: if true;
+      
+      // Usuários autenticados podem escrever (para desenvolvimento)
+      allow write: if request.auth != null;
+    }
+    
+    // Regras para páginas estáticas
+    match /pages/{pageId} {
+      // Qualquer um pode ler páginas
+      allow read: if true;
+      
+      // Usuários autenticados podem escrever (para desenvolvimento)
+      allow write: if request.auth != null;
+    }
+    
+    // Regras para banners
+    match /banners/{bannerId} {
+      // Qualquer um pode ler banners
+      allow read: if true;
+      
+      // Apenas admins podem gerenciar banners
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // Regras para cliques de banners
+    match /bannerClicks/{clickId} {
+      // Qualquer um pode ler e criar cliques
+      allow read, create: if true;
+      
+      // Usuários autenticados podem atualizar/deletar
+      allow update, delete: if request.auth != null;
+    }
+    
+    // Regras para visualizações
+    match /news_views/{viewId} {
+      // Qualquer um pode ler e escrever visualizações
+      allow read, write: if true;
+    }
+    
+    // Regras para estatísticas
+    match /stats/{statId} {
+      // Qualquer um pode ler estatísticas
+      allow read: if true;
+      
+      // Usuários autenticados podem escrever (para desenvolvimento)
+      allow write: if request.auth != null;
+    }
+    
+    // Regras para configurações do site
+    match /settings/{settingId} {
+      // Qualquer um pode ler configurações públicas
+      allow read: if true;
+      
+      // Apenas admins podem modificar configurações
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // Regras para newsletter
+    match /newsletter_subscriptions/{subscriptionId} {
+      // Qualquer um pode criar e ler inscrições
+      allow read, create: if true;
+      
+      // Usuários autenticados podem atualizar/deletar
+      allow update, delete: if request.auth != null;
+    }
+    
+    // Regras para logs de auditoria
+    match /audit_logs/{logId} {
+      // Usuários autenticados podem ler logs
+      allow read: if request.auth != null;
+      
+      // Usuários autenticados podem escrever logs
+      allow write: if request.auth != null;
+    }
+    
+    // Regras para roadmap
+    match /roadmap_requests/{requestId} {
+      // Qualquer um pode ler solicitações do roadmap
+      allow read: if true;
+      
+      // Usuários autenticados podem escrever
+      allow write: if request.auth != null;
+    }
+    
+    // Regras para timeline de status do roadmap
+    match /roadmap_status_timeline/{timelineId} {
+      // Qualquer um pode ler timeline
+      allow read: if true;
+      
+      // Usuários autenticados podem escrever
+      allow write: if request.auth != null;
+    }
+    
+    // Regras para configuração de notícias em destaque
+    match /featured_news_config/{docId} {
+      // Qualquer um pode ler
+      allow read: if true;
+      
+      // Usuários autenticados podem escrever
+      allow write: if request.auth != null;
+    }
+    
+    // Regras para visualizações de notícias (já definida acima)
+    // Removida duplicata - regra já existe acima
+    
+    // Regras para outras coleções não especificadas
+    match /{document=**} {
+      // Negar acesso por padrão para coleções não especificadas
+      allow read, write: if false;
+    }
+  }
+}

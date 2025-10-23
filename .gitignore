@@ -44,3 +44,7 @@ next-env.d.ts
 .firebase/
 .env.local
 .env*.local
+
+# Firebase Service Account Keys (sensitive)
+*firebase-adminsdk*.json
+*service-account*.json
