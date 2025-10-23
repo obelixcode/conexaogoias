@@ -107,6 +107,16 @@ cd /var/www/conexaogoias
 
 # 9. Clonar repositório
 print_status "Clonando repositório..."
+
+# Verificar se o diretório já tem conteúdo
+if [ "$(ls -A /var/www/conexaogoias)" ]; then
+    print_warning "Diretório já existe com conteúdo. Fazendo backup..."
+    mv /var/www/conexaogoias /var/www/conexaogoias.backup.$(date +%Y%m%d_%H%M%S)
+    mkdir -p /var/www/conexaogoias
+    cd /var/www/conexaogoias
+fi
+
+# Clonar repositório
 git clone https://github.com/obelixcode/conexaogoias.git .
 
 # 10. Instalar dependências
