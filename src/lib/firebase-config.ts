@@ -23,6 +23,29 @@ export function validateFirebaseConfig() {
   
   if (missing.length > 0) {
     console.error('❌ Configurações do Firebase faltando:', missing);
+    console.error('📋 Variáveis de ambiente necessárias:');
+    missing.forEach(key => {
+      const envVar = `NEXT_PUBLIC_FIREBASE_${key.toUpperCase()}`;
+      console.error(`   - ${envVar}`);
+    });
+    return false;
+  }
+
+  // Verificar se as configurações não são placeholders
+  const placeholderValues = [
+    '123456789',
+    '1:123456789:web:abcdef123456',
+    'your-api-key',
+    'your-project-id'
+  ];
+
+  const hasPlaceholders = Object.values(firebaseConfig).some(value => 
+    placeholderValues.some(placeholder => value?.includes(placeholder))
+  );
+
+  if (hasPlaceholders) {
+    console.error('❌ Configurações do Firebase contêm valores placeholder');
+    console.error('🔧 Substitua os valores placeholder pelas credenciais reais do Firebase Console');
     return false;
   }
   

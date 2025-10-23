@@ -4,7 +4,7 @@ import {
   onAuthStateChanged,
   User as FirebaseUser
 } from 'firebase/auth';
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from './firebase';
 import { AdminUser, AuthUser, LoginCredentials, UserRole } from '@/types';
 
@@ -18,12 +18,42 @@ export class AdminService {
       console.log('🔧 Configurações do Firebase:', {
         projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
         authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-        apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY ? '✅' : '❌'
+        apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY ? '✅' : '❌',
+        storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+        appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
       });
       
       // Verificar se o Firebase está configurado corretamente
       if (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
+        console.error('❌ NEXT_PUBLIC_FIREBASE_API_KEY não encontrada');
         throw new Error('Configuração do Firebase não encontrada. Verifique as variáveis de ambiente.');
+      }
+
+      if (!process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID) {
+        console.error('❌ NEXT_PUBLIC_FIREBASE_PROJECT_ID não encontrada');
+        throw new Error('Project ID do Firebase não encontrado. Verifique as variáveis de ambiente.');
+      }
+
+      if (!process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN) {
+        console.error('❌ NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN não encontrada');
+        throw new Error('Auth Domain do Firebase não encontrado. Verifique as variáveis de ambiente.');
+      }
+
+      // Verificar se não são valores placeholder
+      const placeholderValues = ['123456789', '1:123456789:web:abcdef123456', 'your-api-key'];
+      const hasPlaceholders = Object.values({
+        apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+        authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+        messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+        appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
+      }).some(value => placeholderValues.some(placeholder => value?.includes(placeholder)));
+
+      if (hasPlaceholders) {
+        console.error('❌ Configurações do Firebase contêm valores placeholder');
+        console.error('🔧 Substitua os valores placeholder pelas credenciais reais do Firebase Console');
+        throw new Error('Configurações do Firebase contêm valores placeholder. Use as credenciais reais do Firebase Console.');
       }
       
       const userCredential = await signInWithEmailAndPassword(
@@ -73,30 +103,67 @@ export class AdminService {
         },
         idToken
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Erro no login:', error);
-      console.error('Código do erro:', error.code);
-      console.error('Mensagem do erro:', error.message);
+      
+      // Log adicional para debug em produção
+      console.error('🔍 Debug info:', {
+        email: credentials.email,
+        hasPassword: !!credentials.password,
+        firebaseConfig: {
+          projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+          authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+          apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY ? 'presente' : 'ausente'
+        },
+        timestamp: new Date().toISOString()
+      });
       
       // Tratamento específico de erros do Firebase
-      if (error.code === 'auth/user-not-found') {
-        throw new Error('Usuário não encontrado. Verifique o email.');
-      } else if (error.code === 'auth/wrong-password') {
-        throw new Error('Senha incorreta. Verifique sua senha.');
-      } else if (error.code === 'auth/invalid-email') {
-        throw new Error('Email inválido. Verifique o formato do email.');
-      } else if (error.code === 'auth/invalid-credential') {
-        throw new Error('Credenciais inválidas. Verifique seu email e senha.');
-      } else if (error.code === 'auth/too-many-requests') {
-        throw new Error('Muitas tentativas de login. Tente novamente mais tarde.');
-      } else if (error.code === 'auth/network-request-failed') {
-        throw new Error('Erro de conexão. Verifique sua internet.');
-      } else if (error.code === 'auth/invalid-api-key') {
-        throw new Error('Chave da API inválida. Verifique as configurações do Firebase.');
-      } else if (error.code === 'auth/project-not-found') {
-        throw new Error('Projeto não encontrado. Verifique as configurações do Firebase.');
+      if (error && typeof error === 'object' && 'code' in error) {
+        const firebaseError = error as { code: string; message: string; stack?: string };
+        
+        console.error('Código do erro:', firebaseError.code);
+        console.error('Mensagem do erro:', firebaseError.message);
+        console.error('Stack trace:', firebaseError.stack);
+        
+        if (firebaseError.code === 'auth/user-not-found') {
+          console.error('👤 Usuário não encontrado no Firebase Auth');
+          throw new Error('Usuário não encontrado. Verifique o email ou crie o usuário no Firebase Console.');
+        } else if (firebaseError.code === 'auth/wrong-password') {
+          console.error('🔒 Senha incorreta');
+          throw new Error('Senha incorreta. Verifique sua senha.');
+        } else if (firebaseError.code === 'auth/invalid-email') {
+          console.error('📧 Email inválido');
+          throw new Error('Email inválido. Verifique o formato do email.');
+        } else if (firebaseError.code === 'auth/invalid-credential') {
+          console.error('🔐 Credenciais inválidas - possíveis causas:');
+          console.error('   1. Usuário não existe no Firebase Auth');
+          console.error('   2. Senha incorreta');
+          console.error('   3. Configurações do Firebase incorretas');
+          console.error('   4. Domínio não autorizado no Firebase Console');
+          throw new Error('Credenciais inválidas. Verifique se o usuário existe no Firebase Auth e se o domínio está autorizado.');
+        } else if (firebaseError.code === 'auth/too-many-requests') {
+          console.error('🚫 Muitas tentativas de login');
+          throw new Error('Muitas tentativas de login. Tente novamente mais tarde.');
+        } else if (firebaseError.code === 'auth/network-request-failed') {
+          console.error('🌐 Erro de rede');
+          throw new Error('Erro de conexão. Verifique sua internet e se o Firebase está acessível.');
+        } else if (firebaseError.code === 'auth/invalid-api-key') {
+          console.error('🔑 Chave da API inválida');
+          throw new Error('Chave da API inválida. Verifique as configurações do Firebase.');
+        } else if (firebaseError.code === 'auth/project-not-found') {
+          console.error('🏗️ Projeto não encontrado');
+          throw new Error('Projeto não encontrado. Verifique as configurações do Firebase.');
+        } else if (firebaseError.code === 'auth/unauthorized-domain') {
+          console.error('🌍 Domínio não autorizado');
+          throw new Error('Domínio não autorizado. Adicione o domínio em Authentication > Settings > Authorized domains no Firebase Console.');
+        } else {
+          console.error('❓ Erro desconhecido:', firebaseError.code);
+          throw new Error(firebaseError.message || 'Erro ao fazer login. Verifique suas credenciais.');
+        }
       } else {
-        throw new Error(error.message || 'Erro ao fazer login. Verifique suas credenciais.');
+        console.error('❓ Erro desconhecido:', error);
+        throw new Error('Erro ao fazer login. Verifique suas credenciais.');
       }
     }
   }
