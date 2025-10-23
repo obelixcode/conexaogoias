@@ -15,7 +15,7 @@ export interface BasicUser {
 const ADMIN_USERS: BasicUser[] = [
   {
     uid: 'admin-001',
-    email: 'admin@conexaogoias.com',
+    email: 'admin@ohoje.com',
     name: 'Administrador',
     role: 'admin' as UserRole,
     isActive: true
