@@ -44,7 +44,11 @@ export default function AdminLoginPage() {
         const basicData = await basicResponse.json();
         console.log('✅ Login via sistema básico bem-sucedido');
         console.log('🔄 Redirecionando para dashboard...');
-        window.location.href = '/admin/dashboard';
+        
+        // Pequeno delay para garantir que a sessão seja processada
+        setTimeout(() => {
+          router.replace('/admin/dashboard');
+        }, 100);
         return;
       }
 
@@ -72,7 +76,10 @@ export default function AdminLoginPage() {
         throw new Error('Erro ao criar sessão');
       }
       
-      window.location.href = '/admin/dashboard';
+      // Pequeno delay para garantir que a sessão seja processada
+      setTimeout(() => {
+        router.replace('/admin/dashboard');
+      }, 100);
     } catch (error: any) {
       console.error('❌ Erro no login:', error);
       console.error('Código do erro:', error.code);
