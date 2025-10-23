@@ -216,19 +216,20 @@ export class BannerService {
         const cleanUrl = (url: string) => {
           if (!url) return url;
           
-          // Decodificar URL se necessário
-          let cleanUrl = decodeURIComponent(url);
+          // NÃO decodificar URLs do Firebase Storage, pois elas precisam manter %2F encoded
+          // Apenas limpar URLs problemáticas do Next.js localhost
+          let cleanedUrl = url;
           
           // Remover prefixos do localhost
-          cleanUrl = cleanUrl.replace(/^http:\/\/localhost:3000\/_next\/image\?url=/, '');
-          cleanUrl = cleanUrl.replace(/^https:\/\/localhost:3000\/_next\/image\?url=/, '');
+          cleanedUrl = cleanedUrl.replace(/^http:\/\/localhost:3000\/_next\/image\?url=/, '');
+          cleanedUrl = cleanedUrl.replace(/^https:\/\/localhost:3000\/_next\/image\?url=/, '');
           
           // Remover parâmetros de query do Next.js
-          cleanUrl = cleanUrl.replace(/&w=\d+&q=\d+$/, '');
-          cleanUrl = cleanUrl.replace(/&w=\d+$/, '');
-          cleanUrl = cleanUrl.replace(/&q=\d+$/, '');
+          cleanedUrl = cleanedUrl.replace(/&w=\d+&q=\d+$/, '');
+          cleanedUrl = cleanedUrl.replace(/&w=\d+$/, '');
+          cleanedUrl = cleanedUrl.replace(/&q=\d+$/, '');
           
-          return cleanUrl;
+          return cleanedUrl;
         };
         
         const cleanedImage = cleanUrl(data.image);
