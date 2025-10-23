@@ -4,8 +4,9 @@ import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getStorage, connectStorageEmulator } from "firebase/storage";
 import { firebaseConfig, validateFirebaseConfig } from "./firebase-config";
 
-// Validar configurações antes de inicializar
-if (!validateFirebaseConfig()) {
+// Validar configurações antes de inicializar (apenas avisar em desenvolvimento)
+const isConfigValid = validateFirebaseConfig();
+if (!isConfigValid && process.env.NODE_ENV === 'production') {
   throw new Error('Configurações do Firebase inválidas. Verifique as variáveis de ambiente.');
 }
 
