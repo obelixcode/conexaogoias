@@ -1,29 +1,38 @@
 import { initializeApp, getApps, cert, App } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { getAuth } from 'firebase-admin/auth';
+import { firebaseAdminConfig, validateFirebaseAdminConfig } from './firebase-config';
 
 let adminApp: App;
 
 export function getAdminApp(): App {
   if (!adminApp) {
     if (getApps().length === 0) {
-      // Em App Hosting, ADC é automático
-      // Localmente, use GOOGLE_APPLICATION_CREDENTIALS
-      if (process.env.FIREBASE_ADMIN_PRIVATE_KEY) {
-        // Fallback para desenvolvimento local
+      console.log('🔧 Inicializando Firebase Admin SDK...');
+      
+      // Validar configurações do Firebase Admin
+      if (!validateFirebaseAdminConfig()) {
+        throw new Error('Configurações do Firebase Admin inválidas. Verifique as variáveis de ambiente.');
+      }
+      
+      console.log('🔧 Usando credenciais de service account...');
+      try {
         adminApp = initializeApp({
           credential: cert({
-            projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,
-            clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
-            privateKey: process.env.FIREBASE_ADMIN_PRIVATE_KEY.replace(/\\n/g, '\n'),
+            projectId: firebaseAdminConfig.projectId,
+            clientEmail: firebaseAdminConfig.clientEmail,
+            privateKey: firebaseAdminConfig.privateKey,
           }),
+          projectId: firebaseAdminConfig.projectId,
         });
-      } else {
-        // App Hosting usa ADC automaticamente
-        adminApp = initializeApp();
+        console.log('✅ Firebase Admin SDK inicializado com credenciais');
+      } catch (error) {
+        console.error('❌ Erro ao inicializar Firebase Admin SDK:', error);
+        throw error;
       }
     } else {
       adminApp = getApps()[0];
+      console.log('✅ Firebase Admin SDK já inicializado');
     }
   }
   return adminApp;

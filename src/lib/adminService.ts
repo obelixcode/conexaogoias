@@ -15,6 +15,16 @@ export class AdminService {
   static async login(credentials: LoginCredentials): Promise<{ user: AuthUser; idToken: string }> {
     try {
       console.log('🔐 Tentando fazer login com:', credentials.email);
+      console.log('🔧 Configurações do Firebase:', {
+        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+        authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+        apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY ? '✅' : '❌'
+      });
+      
+      // Verificar se o Firebase está configurado corretamente
+      if (!process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
+        throw new Error('Configuração do Firebase não encontrada. Verifique as variáveis de ambiente.');
+      }
       
       const userCredential = await signInWithEmailAndPassword(
         auth, 
@@ -65,6 +75,8 @@ export class AdminService {
       };
     } catch (error: any) {
       console.error('❌ Erro no login:', error);
+      console.error('Código do erro:', error.code);
+      console.error('Mensagem do erro:', error.message);
       
       // Tratamento específico de erros do Firebase
       if (error.code === 'auth/user-not-found') {
@@ -73,10 +85,16 @@ export class AdminService {
         throw new Error('Senha incorreta. Verifique sua senha.');
       } else if (error.code === 'auth/invalid-email') {
         throw new Error('Email inválido. Verifique o formato do email.');
+      } else if (error.code === 'auth/invalid-credential') {
+        throw new Error('Credenciais inválidas. Verifique seu email e senha.');
       } else if (error.code === 'auth/too-many-requests') {
         throw new Error('Muitas tentativas de login. Tente novamente mais tarde.');
       } else if (error.code === 'auth/network-request-failed') {
         throw new Error('Erro de conexão. Verifique sua internet.');
+      } else if (error.code === 'auth/invalid-api-key') {
+        throw new Error('Chave da API inválida. Verifique as configurações do Firebase.');
+      } else if (error.code === 'auth/project-not-found') {
+        throw new Error('Projeto não encontrado. Verifique as configurações do Firebase.');
       } else {
         throw new Error(error.message || 'Erro ao fazer login. Verifique suas credenciais.');
       }

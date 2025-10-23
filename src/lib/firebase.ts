@@ -1,35 +1,12 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
+import { getStorage, connectStorageEmulator } from "firebase/storage";
+import { firebaseConfig, validateFirebaseConfig } from "./firebase-config";
 
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-};
-
-// Verificar se as configurações estão corretas
-const requiredEnvVars = [
-  'NEXT_PUBLIC_FIREBASE_API_KEY',
-  'NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN',
-  'NEXT_PUBLIC_FIREBASE_PROJECT_ID',
-  'NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET',
-  'NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID',
-  'NEXT_PUBLIC_FIREBASE_APP_ID'
-];
-
-const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
-
-if (missingVars.length > 0) {
-  console.error('❌ Configurações do Firebase não encontradas!');
-  console.error('Variáveis faltando:', missingVars);
-  console.error('Verifique o arquivo .env.production');
-} else {
-  console.log('✅ Configurações do Firebase carregadas');
+// Validar configurações antes de inicializar
+if (!validateFirebaseConfig()) {
+  throw new Error('Configurações do Firebase inválidas. Verifique as variáveis de ambiente.');
 }
 
 // Initialize Firebase
@@ -39,5 +16,24 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+
+// Configurar emuladores em desenvolvimento (se necessário)
+if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
+  try {
+    // Só conectar emuladores se não estiverem já conectados
+    if (!auth._delegate._config?.emulator) {
+      connectAuthEmulator(auth, 'http://localhost:9099');
+    }
+    if (!db._delegate._settings?.host?.includes('localhost')) {
+      connectFirestoreEmulator(db, 'localhost', 8080);
+    }
+    if (!storage._delegate._host?.includes('localhost')) {
+      connectStorageEmulator(storage, 'localhost', 9199);
+    }
+  } catch (error) {
+    // Emuladores já conectados ou não disponíveis
+    console.log('Emuladores não configurados ou já conectados');
+  }
+}
 
 export default app;
