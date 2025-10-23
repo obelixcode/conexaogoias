@@ -123,6 +123,27 @@ git clone https://github.com/obelixcode/conexaogoias.git .
 print_status "Instalando dependências da aplicação..."
 npm install --legacy-peer-deps --no-optional --force
 
+# 10.1. Instalar dependências específicas do Firebase Admin
+print_status "Instalando dependências do Firebase Admin..."
+npm install @google-cloud/firestore@latest --save
+npm install @google-cloud/storage@latest --save
+npm install @google-cloud/common@latest --save
+npm install firebase-admin@latest --save
+
+# Verificar se as dependências foram instaladas
+print_status "Verificando dependências do Firebase..."
+if [ -d "node_modules/@google-cloud/firestore" ]; then
+    print_status "✅ @google-cloud/firestore instalado"
+else
+    print_error "❌ @google-cloud/firestore não instalado"
+fi
+
+if [ -d "node_modules/firebase-admin" ]; then
+    print_status "✅ firebase-admin instalado"
+else
+    print_error "❌ firebase-admin não instalado"
+fi
+
 # 11. Criar arquivo de ambiente
 print_status "Criando arquivo de ambiente..."
 cat > .env.production << 'EOF'
