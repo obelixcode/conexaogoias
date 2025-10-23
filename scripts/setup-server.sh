@@ -69,9 +69,9 @@ apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-conf
 print_status "Instalando dependências básicas..."
 apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install curl wget git unzip software-properties-common htop
 
-# 3. Instalar Node.js 18
-print_status "Instalando Node.js 18..."
-curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+# 3. Instalar Node.js 20
+print_status "Instalando Node.js 20..."
+curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install nodejs
 
 # Verificar instalação

@@ -51,6 +51,15 @@ cd /var/www/conexaogoias
 print_status "Clonando repositório..."
 git clone https://github.com/obelixcode/conexaogoias.git .
 
+# Verificar versão do Node.js
+NODE_VERSION=$(node --version | cut -d'v' -f2 | cut -d'.' -f1)
+if [ "$NODE_VERSION" -lt 20 ]; then
+    print_warning "Node.js $NODE_VERSION detectado. Firebase requer Node.js 20+"
+    print_status "Atualizando para Node.js 20..."
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+    apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install nodejs
+fi
+
 # Instalar dependências
 print_status "Instalando dependências..."
 npm install --legacy-peer-deps --no-optional
