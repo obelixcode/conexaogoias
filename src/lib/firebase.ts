@@ -20,16 +20,12 @@ export const storage = getStorage(app);
 // Configurar emuladores em desenvolvimento (se necessário)
 if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
   try {
-    // Só conectar emuladores se não estiverem já conectados
-    if (!auth._delegate._config?.emulator) {
-      connectAuthEmulator(auth, 'http://localhost:9099');
-    }
-    if (!db._delegate._settings?.host?.includes('localhost')) {
-      connectFirestoreEmulator(db, 'localhost', 8080);
-    }
-    if (!storage._delegate._host?.includes('localhost')) {
-      connectStorageEmulator(storage, 'localhost', 9199);
-    }
+    // Conectar emuladores apenas se não estiverem já conectados
+    // Usar try/catch para detectar se já estão conectados
+    connectAuthEmulator(auth, 'http://localhost:9099');
+    connectFirestoreEmulator(db, 'localhost', 8080);
+    connectStorageEmulator(storage, 'localhost', 9199);
+    console.log('✅ Emuladores do Firebase conectados');
   } catch (error) {
     // Emuladores já conectados ou não disponíveis
     console.log('Emuladores não configurados ou já conectados');
