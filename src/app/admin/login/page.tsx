@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -22,19 +22,13 @@ export default function AdminLoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [isRedirecting, setIsRedirecting] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
   const currentYear = getCurrentYear();
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Evitar múltiplos envios e garantir que está montado
-    if (isLoading || isRedirecting || !isMounted) {
+
+    // Evitar múltiplos envios
+    if (isLoading || isRedirecting) {
       return;
     }
     
@@ -42,46 +36,18 @@ export default function AdminLoginPage() {
     setError('');
 
     try {
-      // Tentar autenticação básica primeiro
-      const basicResponse = await fetch('/api/auth/basic', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(credentials),
-      });
-
-      if (basicResponse.ok) {
-        console.log('✅ Login via sistema básico bem-sucedido');
-        console.log('🔄 Redirecionando para dashboard...');
-        
-        setIsRedirecting(true);
-        // Usar window.location.href para evitar problemas de hidratação
-        setTimeout(() => {
-          if (isMounted) {
-            window.location.href = '/admin/dashboard';
-          }
-        }, 100);
-        return;
-      }
-
-      // Se falhar, tentar Firebase Auth como fallback
-      console.log('🔄 Tentando Firebase Auth como fallback...');
-      const { user, idToken } = await AdminService.login(credentials);
+      // Usar APENAS Firebase Auth para autenticação segura
+      console.log('🔐 Autenticando via Firebase Auth...');
+      const { idToken } = await AdminService.login(credentials);
       
-      // Criar session cookie via API com dados do usuário
+      // Criar session cookie via API com ID Token do Firebase
       const response = await fetch('/api/auth/session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-          idToken,
-          userData: {
-            uid: user.uid,
-            email: user.email,
-            name: user.name || 'Administrador'
-          }
+          idToken
         }),
       });
 
@@ -89,13 +55,11 @@ export default function AdminLoginPage() {
         throw new Error('Erro ao criar sessão');
       }
       
-      setIsRedirecting(true);
-      // Usar window.location.href para evitar problemas de hidratação
-      setTimeout(() => {
-        if (isMounted) {
+        setIsRedirecting(true);
+        // Usar window.location.href para evitar problemas de hidratação
+        setTimeout(() => {
           window.location.href = '/admin/dashboard';
-        }
-      }, 100);
+        }, 100);
     } catch (error: unknown) {
       console.error('❌ Erro no login:', error);
       
@@ -143,24 +107,7 @@ export default function AdminLoginPage() {
   };
 
 
-  // Evitar problemas de hidratação - renderizar apenas quando montado
-  if (!isMounted) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full space-y-8">
-          <div className="text-center">
-            <div className="text-4xl font-bold">
-              <span className="text-blue-900">CONEXÃO GOIÁS</span>
-              <span className="text-gray-500 text-lg">.com</span>
-            </div>
-            <h2 className="mt-6 text-3xl font-bold text-gray-900">
-              Carregando...
-            </h2>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Renderizar formulário de login diretamente
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">

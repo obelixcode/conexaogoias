@@ -11,23 +11,7 @@ export interface BasicUser {
   isActive: boolean;
 }
 
-// Usuários admin padrão (em produção, use banco de dados)
-const ADMIN_USERS: BasicUser[] = [
-  {
-    uid: 'admin-001',
-    email: 'admin@conexaogoias.com',
-    name: 'Administrador',
-    role: 'admin' as UserRole,
-    isActive: true
-  },
-  {
-    uid: 'admin-002',
-    email: 'admin@ohoje.com',
-    name: 'Administrador O Hoje',
-    role: 'admin' as UserRole,
-    isActive: true
-  }
-];
+// Sistema de autenticação seguro usando apenas Firebase Auth
 
 export async function getBasicAuthUser(): Promise<BasicUser | null> {
   try {
@@ -45,15 +29,8 @@ export async function getBasicAuthUser(): Promise<BasicUser | null> {
       return null;
     }
     
-    // Verificar se é um email válido (sistema simples)
-    if (session.includes('@') && session.includes('.')) {
-      // É um email - verificar se é admin
-      const user = ADMIN_USERS.find(u => u.email === session);
-      if (user) {
-        console.log('✅ Usuário admin encontrado:', user.email);
-        return user;
-      }
-    }
+    // Sistema de autenticação básico removido por segurança
+    // Apenas sessões base64 válidas são aceitas
     
     // Tentar decodificar como base64
     try {
@@ -98,18 +75,5 @@ export function requireBasicAuth() {
   };
 }
 
-// Função para autenticação básica sem Firebase Auth
-export function authenticateBasicUser(email: string, password: string): BasicUser | null {
-  // Verificar se é um usuário admin válido
-  const user = ADMIN_USERS.find(u => u.email === email && u.isActive);
-  
-  if (!user) {
-    console.log('❌ Usuário não encontrado ou inativo:', email);
-    return null;
-  }
-  
-  // Para simplificar, aceitar qualquer senha para usuários admin
-  // Em produção, implementar hash de senha
-  console.log('✅ Usuário autenticado via sistema básico:', email);
-  return user;
-}
+// Função de autenticação básica removida por segurança
+// Toda autenticação deve passar pelo Firebase Auth
