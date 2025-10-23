@@ -119,6 +119,19 @@ fi
 # Clonar repositório
 git clone https://github.com/obelixcode/conexaogoias.git .
 
+# Downgrade automático do React (19 → 18)
+print_info "Aplicando downgrade automático do React 19 → 18..."
+if grep -q '"react": "19' package.json; then
+    print_warning "React 19 detectado. Aplicando downgrade para React 18..."
+    sed -i 's/"react": "19\.1\.0"/"react": "^18.3.1"/' package.json
+    sed -i 's/"react-dom": "19\.1\.0"/"react-dom": "^18.3.1"/' package.json
+    sed -i 's/"@types\/react": "^19"/"@types\/react": "^18"/' package.json
+    sed -i 's/"@types\/react-dom": "^19"/"@types\/react-dom": "^18"/' package.json
+    print_status "Downgrade do React aplicado com sucesso!"
+else
+    print_status "React já está na versão 18"
+fi
+
 # 10. Instalar dependências
 print_status "Instalando dependências da aplicação..."
 npm install --legacy-peer-deps --no-optional --force
