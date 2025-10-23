@@ -146,6 +146,8 @@ export class FeaturedNewsService {
       // Montar lista de notícias em destaque na ordem configurada
       const featuredNews: FeaturedNews[] = [];
       
+      console.log('🔍 Featured news order from config:', config.newsIds);
+      
       for (let i = 0; i < config.newsIds.length; i++) {
         const newsId = config.newsIds[i];
         const newsData = newsMap.get(newsId);
@@ -172,6 +174,8 @@ export class FeaturedNewsService {
         }
       }
 
+      console.log('📋 Final featured news order:', featuredNews.map(n => ({ id: n.id, title: n.title, position: n.position })));
+      
       return featuredNews;
     } catch (error) {
       console.error('Error getting featured news with data:', error);
