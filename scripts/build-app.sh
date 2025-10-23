@@ -41,7 +41,7 @@ fi
 # Verificar se as dependências estão instaladas
 if [ ! -d "node_modules" ]; then
     print_status "Instalando dependências..."
-    npm install --legacy-peer-deps --no-optional
+    npm install --legacy-peer-deps --no-optional --force
 fi
 
 # Instalar dependências específicas do Firebase Admin

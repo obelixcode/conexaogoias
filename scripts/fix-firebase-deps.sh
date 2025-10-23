@@ -41,7 +41,7 @@ rm -rf node_modules package-lock.json
 
 # Reinstalar dependências
 print_status "Reinstalando dependências..."
-npm install --legacy-peer-deps
+npm install --legacy-peer-deps --no-optional --force
 
 # Instalar dependências específicas do Firebase Admin
 print_status "Instalando dependências do Firebase Admin..."

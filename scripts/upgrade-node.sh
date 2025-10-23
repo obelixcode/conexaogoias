@@ -64,7 +64,16 @@ if [ "$NODE_VERSION" -ge 20 ]; then
     print_status "Reinstalando dependências..."
     cd /var/www/conexaogoias
     rm -rf node_modules package-lock.json
-    npm install --legacy-peer-deps
+    
+    # Criar .npmrc para forçar resolução
+    print_status "Configurando resolução de dependências..."
+    cat > .npmrc << 'EOF'
+legacy-peer-deps=true
+force=true
+auto-install-peers=false
+EOF
+    
+    npm install --legacy-peer-deps --no-optional --force
     
     # Fazer build
     print_status "Fazendo build da aplicação..."

@@ -121,7 +121,7 @@ git clone https://github.com/obelixcode/conexaogoias.git .
 
 # 10. Instalar dependências
 print_status "Instalando dependências da aplicação..."
-npm install --legacy-peer-deps --no-optional
+npm install --legacy-peer-deps --no-optional --force
 
 # 11. Criar arquivo de ambiente
 print_status "Criando arquivo de ambiente..."

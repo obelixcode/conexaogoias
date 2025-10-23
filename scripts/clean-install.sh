@@ -62,7 +62,7 @@ fi
 
 # Instalar dependências
 print_status "Instalando dependências..."
-npm install --legacy-peer-deps --no-optional
+npm install --legacy-peer-deps --no-optional --force
 
 # Instalar dependências específicas do Firebase Admin
 print_status "Instalando dependências do Firebase Admin..."
