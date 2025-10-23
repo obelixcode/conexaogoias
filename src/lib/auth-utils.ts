@@ -7,13 +7,20 @@ export async function getAuthUser(): Promise<AuthUser | null> {
     const cookieStore = await cookies();
     const session = cookieStore.get('__session')?.value;
     
-    if (!session) return null;
+    if (!session) {
+      console.log('🔍 Nenhuma sessão encontrada');
+      return null;
+    }
     
+    console.log('🔍 Verificando sessão...');
     const decodedClaims = await adminAuth().verifySessionCookie(session, true);
+    console.log('✅ Sessão válida para:', decodedClaims.email);
     
     // Buscar dados do usuário no Firestore
     const userDoc = await adminAuth().getUser(decodedClaims.uid);
     const userData = userDoc.customClaims || {};
+    
+    console.log('✅ Dados do usuário obtidos:', userData);
     
     return {
       uid: decodedClaims.uid,
@@ -24,6 +31,7 @@ export async function getAuthUser(): Promise<AuthUser | null> {
       avatar: userData.avatar || null,
     };
   } catch (error) {
+    console.error('❌ Erro ao verificar usuário:', error);
     return null;
   }
 }

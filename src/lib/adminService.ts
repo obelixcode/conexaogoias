@@ -14,6 +14,8 @@ export class AdminService {
   // Login admin user
   static async login(credentials: LoginCredentials): Promise<{ user: AuthUser; idToken: string }> {
     try {
+      console.log('🔐 Tentando fazer login com:', credentials.email);
+      
       const userCredential = await signInWithEmailAndPassword(
         auth, 
         credentials.email, 
@@ -21,25 +23,34 @@ export class AdminService {
       );
       
       const user = userCredential.user;
+      console.log('✅ Usuário autenticado no Firebase Auth:', user.uid);
+      
       const idToken = await user.getIdToken();
+      console.log('✅ ID Token obtido');
       
       // Get user data from Firestore
+      console.log('🔍 Buscando dados do usuário no Firestore...');
       const userDoc = await getDoc(doc(db, USERS_COLLECTION, user.uid));
       
       if (!userDoc.exists()) {
-        throw new Error('Usuário não encontrado no sistema');
+        console.error('❌ Usuário não encontrado no Firestore');
+        throw new Error('Usuário não encontrado no sistema. Verifique se o usuário foi criado corretamente.');
       }
       
       const userData = userDoc.data() as AdminUser;
+      console.log('✅ Dados do usuário encontrados:', userData);
       
       if (!userData.isActive) {
-        throw new Error('Usuário desativado');
+        console.error('❌ Usuário desativado');
+        throw new Error('Usuário desativado. Entre em contato com o administrador.');
       }
       
       // Update last login
       await updateDoc(doc(db, USERS_COLLECTION, user.uid), {
         lastLoginAt: new Date()
       });
+      
+      console.log('✅ Login realizado com sucesso');
       
       return {
         user: {
@@ -52,9 +63,23 @@ export class AdminService {
         },
         idToken
       };
-    } catch (error) {
-      console.error('Login error:', error);
-      throw new Error('Erro ao fazer login. Verifique suas credenciais.');
+    } catch (error: any) {
+      console.error('❌ Erro no login:', error);
+      
+      // Tratamento específico de erros do Firebase
+      if (error.code === 'auth/user-not-found') {
+        throw new Error('Usuário não encontrado. Verifique o email.');
+      } else if (error.code === 'auth/wrong-password') {
+        throw new Error('Senha incorreta. Verifique sua senha.');
+      } else if (error.code === 'auth/invalid-email') {
+        throw new Error('Email inválido. Verifique o formato do email.');
+      } else if (error.code === 'auth/too-many-requests') {
+        throw new Error('Muitas tentativas de login. Tente novamente mais tarde.');
+      } else if (error.code === 'auth/network-request-failed') {
+        throw new Error('Erro de conexão. Verifique sua internet.');
+      } else {
+        throw new Error(error.message || 'Erro ao fazer login. Verifique suas credenciais.');
+      }
     }
   }
 
