@@ -12,8 +12,8 @@ import { FeaturedNewsService } from '@/lib/featuredNewsService';
 import { CategoryHighlightsService } from '@/lib/categoryHighlightsService';
 import { CategoryHighlights } from '@/components/CategoryHighlights';
 
-// Enable ISR with 60 seconds revalidation to reflect featured news changes
-export const revalidate = 60;
+// Enable ISR with 10 seconds revalidation to reflect featured news changes
+export const revalidate = 10;
 
 async function HomePageContent() {
   try {

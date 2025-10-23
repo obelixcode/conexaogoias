@@ -53,7 +53,8 @@ export class FeaturedNewsService {
       const configData = {
         newsIds: newsIds || [],
         updatedAt: new Date(),
-        updatedBy: updatedBy || 'unknown'
+        updatedBy: updatedBy || 'unknown',
+        cacheBuster: Date.now() // Adicionar cache buster
       };
 
       // Verificar se o documento existe
@@ -64,6 +65,8 @@ export class FeaturedNewsService {
       } else {
         await setDoc(configRef, configData);
       }
+
+      console.log('✅ Featured news updated with cache buster:', configData.cacheBuster);
     } catch (error) {
       console.error('Error updating featured news:', error);
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
@@ -74,6 +77,7 @@ export class FeaturedNewsService {
   // Buscar notícias completas baseado nos IDs configurados
   static async getFeaturedNewsWithData(): Promise<FeaturedNews[]> {
     try {
+      // Forçar bypass do cache do Firebase
       const config = await this.getFeaturedNewsConfig();
       
       if (!config || config.newsIds.length === 0) {
@@ -147,6 +151,7 @@ export class FeaturedNewsService {
       const featuredNews: FeaturedNews[] = [];
       
       console.log('🔍 Featured news order from config:', config.newsIds);
+      console.log('⏰ Cache timestamp:', new Date().toISOString());
       
       for (let i = 0; i < config.newsIds.length; i++) {
         const newsId = config.newsIds[i];
