@@ -7,6 +7,32 @@ set -e
 
 echo "🚀 Configurando servidor Ubuntu para Conexão Goiás..."
 
+# ===== CONFIGURAÇÕES PARA EVITAR PROMPTS INTERATIVOS =====
+echo "🔧 Configurando ambiente para instalação automática..."
+
+# Configurar ambiente para não interromper
+export DEBIAN_FRONTEND=noninteractive
+export DEBIAN_PRIORITY=critical
+
+# Configurar dpkg para não perguntar sobre conflitos
+echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+echo 'debconf debconf/priority select critical' | debconf-set-selections
+
+# Configurar openssh-server para não interromper
+echo 'openssh-server openssh-server/permit-root-login select yes' | debconf-set-selections
+echo 'openssh-server openssh-server/password-authentication select no' | debconf-set-selections
+
+# Configurar nginx para não interromper
+echo 'nginx nginx/enable_ssl select true' | debconf-set-selections
+
+# Configurar certbot para não interromper
+echo 'certbot certbot/install_cron select true' | debconf-set-selections
+
+# Configurar ufw para não interromper
+echo 'ufw ufw/enable select true' | debconf-set-selections
+
+echo "✅ Ambiente configurado para instalação automática!"
+
 # Cores para output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -36,16 +62,17 @@ print_status "Iniciando configuração do servidor..."
 
 # 1. Atualizar sistema
 print_status "Atualizando sistema..."
-apt update && apt upgrade -y
+apt-get update
+apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
 
 # 2. Instalar dependências básicas
 print_status "Instalando dependências básicas..."
-apt install -y curl wget git unzip software-properties-common htop
+apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install curl wget git unzip software-properties-common htop
 
 # 3. Instalar Node.js 18
 print_status "Instalando Node.js 18..."
 curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-apt-get install -y nodejs
+apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install nodejs
 
 # Verificar instalação
 NODE_VERSION=$(node --version)
@@ -59,13 +86,13 @@ npm install -g pm2
 
 # 5. Instalar Nginx
 print_status "Instalando Nginx..."
-apt install nginx -y
+apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install nginx
 systemctl start nginx
 systemctl enable nginx
 
 # 6. Instalar Certbot
 print_status "Instalando Certbot..."
-apt install certbot python3-certbot-nginx -y
+apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install certbot python3-certbot-nginx
 
 # 7. Configurar Firewall
 print_status "Configurando firewall..."
@@ -262,4 +289,10 @@ echo "  pm2 restart conexaogoias - Reiniciar aplicação"
 echo "  nginx -t            - Testar configuração Nginx"
 echo "  systemctl reload nginx - Recarregar Nginx"
 echo ""
+# 20. Limpeza final
+print_status "Limpando configurações temporárias..."
+# Restaurar configurações de ambiente para uso normal
+unset DEBIAN_FRONTEND
+unset DEBIAN_PRIORITY
+
 print_status "Servidor configurado com sucesso! 🎉"
