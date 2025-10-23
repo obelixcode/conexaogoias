@@ -111,7 +111,7 @@ git clone https://github.com/obelixcode/conexaogoias.git .
 
 # 10. Instalar dependências
 print_status "Instalando dependências da aplicação..."
-npm install --legacy-peer-deps
+npm install --legacy-peer-deps --no-optional
 
 # 11. Criar arquivo de ambiente
 print_status "Criando arquivo de ambiente..."
@@ -141,9 +141,30 @@ EOF
 print_warning "IMPORTANTE: Edite o arquivo .env.production com suas configurações!"
 print_warning "Especialmente: NEXT_PUBLIC_APP_URL e FIREBASE_ADMIN_PRIVATE_KEY"
 
-# 12. Fazer build
+# 12. Fazer build da aplicação
 print_status "Fazendo build da aplicação..."
-npm run build
+
+# Verificar se as variáveis de ambiente estão configuradas
+if [ ! -f ".env.production" ]; then
+    print_error "Arquivo .env.production não encontrado!"
+    exit 1
+fi
+
+# Fazer build com verificação de erro
+if ! npm run build; then
+    print_error "Build falhou! Verificando logs..."
+    print_warning "Possíveis causas:"
+    print_warning "1. Variáveis de ambiente não configuradas"
+    print_warning "2. Dependências faltando"
+    print_warning "3. Erro de TypeScript"
+    print_warning "4. Erro de ESLint"
+    
+    print_status "Tentando instalar dependências novamente..."
+    npm install --legacy-peer-deps --no-optional
+    
+    print_status "Tentando build novamente..."
+    npm run build
+fi
 
 # 13. Configurar PM2
 print_status "Configurando PM2..."

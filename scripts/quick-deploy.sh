@@ -46,7 +46,11 @@ npm install --legacy-peer-deps
 
 # Fazer build
 print_status "Fazendo build..."
-npm run build
+if [ -f "scripts/build-app.sh" ]; then
+    ./scripts/build-app.sh
+else
+    npm run build
+fi
 
 # Iniciar aplicação
 print_status "Iniciando aplicação..."
