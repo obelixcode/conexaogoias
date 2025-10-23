@@ -1,21 +1,23 @@
 // Sistema de autenticação básico e confiável
 import { cookies } from 'next/headers';
 
+import { UserRole } from '@/types/user';
+
 export interface BasicUser {
   uid: string;
   email: string;
   name: string;
-  role: string;
+  role: UserRole;
   isActive: boolean;
 }
 
 // Usuário admin padrão (em produção, use banco de dados)
-const ADMIN_USERS = [
+const ADMIN_USERS: BasicUser[] = [
   {
     uid: 'admin-001',
     email: 'admin@conexaogoias.com',
     name: 'Administrador',
-    role: 'admin',
+    role: 'admin' as UserRole,
     isActive: true
   }
 ];

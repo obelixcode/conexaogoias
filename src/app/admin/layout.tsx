@@ -1,9 +1,24 @@
 import { headers } from 'next/headers';
-import { getBasicAuthUser } from '@/lib/basic-auth';
+import { getBasicAuthUser, BasicUser } from '@/lib/basic-auth';
+import { AuthUser } from '@/types/user';
 import AdminLayoutClient from './layout-client';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
+}
+
+// Função para converter BasicUser para AuthUser de forma segura
+function convertBasicUserToAuthUser(basicUser: BasicUser | null): AuthUser | null {
+  if (!basicUser) return null;
+  
+  return {
+    uid: basicUser.uid,
+    email: basicUser.email,
+    name: basicUser.name,
+    role: basicUser.role, // Agora são compatíveis
+    isActive: basicUser.isActive,
+    avatar: undefined // BasicUser não tem avatar
+  };
 }
 
 export default async function AdminLayout({ children }: AdminLayoutProps) {
@@ -25,5 +40,8 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
     // Don't redirect here, let middleware handle it
   }
 
-  return <AdminLayoutClient user={user}>{children}</AdminLayoutClient>;
+  // Converter BasicUser para AuthUser
+  const authUser = convertBasicUserToAuthUser(user);
+  
+  return <AdminLayoutClient user={authUser}>{children}</AdminLayoutClient>;
 }

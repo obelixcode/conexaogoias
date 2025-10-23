@@ -44,7 +44,7 @@ export default function AdminLoginPage() {
           userData: {
             uid: user.uid,
             email: user.email,
-            name: user.displayName || 'Administrador'
+            name: user.name || 'Administrador'
           }
         }),
       });
