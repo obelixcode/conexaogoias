@@ -31,6 +31,7 @@ export default function BannersPage() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingBanner, setEditingBanner] = useState<Banner | null>(null);
   const [formData, setFormData] = useState({
+    id: '',
     title: '',
     imageUrl: '',
     linkUrl: '',
@@ -121,6 +122,7 @@ export default function BannersPage() {
   const handleEdit = (banner: Banner) => {
     setEditingBanner(banner);
     setFormData({
+      id: banner.id,
       title: banner.title,
       imageUrl: banner.image,
       linkUrl: banner.link,
@@ -160,6 +162,7 @@ export default function BannersPage() {
 
   const resetForm = () => {
     setFormData({
+      id: '',
       title: '',
       imageUrl: '',
       linkUrl: '',
