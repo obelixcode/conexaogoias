@@ -66,7 +66,7 @@ export function Header({ categories }: HeaderProps) {
             {categories && categories.length > 0 ? categories.map((category) => (
               <a
                 key={category.id}
-                href={`/categoria/${category.slug}`}
+                href={category.slug === 'ultimas' ? '/ultimas' : `/categoria/${category.slug}`}
                 className="font-medium transition-colors hover:opacity-80"
                 style={{ color: category.color }}
               >
@@ -139,7 +139,7 @@ export function Header({ categories }: HeaderProps) {
               {categories && categories.length > 0 ? categories.map((category) => (
                 <a
                   key={category.id}
-                  href={`/categoria/${category.slug}`}
+                  href={category.slug === 'ultimas' ? '/ultimas' : `/categoria/${category.slug}`}
                   className="block py-2 font-medium transition-colors hover:opacity-80"
                   style={{ color: category.color }}
                   onClick={() => setIsMobileMenuOpen(false)}

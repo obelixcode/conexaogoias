@@ -585,6 +585,89 @@ export class NewsService {
     }
   }
 
+  // Get all published news with specific sorting and pagination
+  static async getAllPublishedNews(
+    sortBy: 'recent' | 'popular' | 'oldest' = 'recent',
+    page: number = 1,
+    limit: number = 12
+  ): Promise<PaginatedResponse<NewsWithCategory>> {
+    try {
+      let newsQuery;
+      
+      switch (sortBy) {
+        case 'popular':
+          newsQuery = query(
+            collection(db, NEWS_COLLECTION),
+            where('isPublished', '==', true),
+            orderBy('views', 'desc'),
+            orderBy('publishedAt', 'desc')
+          );
+          break;
+        case 'oldest':
+          newsQuery = query(
+            collection(db, NEWS_COLLECTION),
+            where('isPublished', '==', true),
+            orderBy('publishedAt', 'asc')
+          );
+          break;
+        case 'recent':
+        default:
+          newsQuery = query(
+            collection(db, NEWS_COLLECTION),
+            where('isPublished', '==', true),
+            orderBy('publishedAt', 'desc')
+          );
+          break;
+      }
+      
+      // Buscar TODAS as notícias primeiro para calcular paginação
+      const allNewsSnapshot = await getDocs(newsQuery);
+      const totalItems = allNewsSnapshot.size;
+      
+      // Aplicar paginação
+      const startIndex = (page - 1) * limit;
+      const newsWithCategory: NewsWithCategory[] = [];
+      
+      // Processar apenas os itens da página atual
+      const docsToProcess = allNewsSnapshot.docs.slice(startIndex, startIndex + limit);
+      
+      for (const newsDoc of docsToProcess) {
+        const newsData = newsDoc.data();
+        const categoryDoc = await getDoc(doc(db, CATEGORIES_COLLECTION, newsData.categoryId));
+        const categoryData = categoryDoc.data();
+        
+        newsWithCategory.push({
+          id: newsDoc.id,
+          ...newsData,
+          createdAt: newsData.createdAt?.toDate() || new Date(),
+          updatedAt: newsData.updatedAt?.toDate() || new Date(),
+          publishedAt: newsData.publishedAt?.toDate(),
+          category: {
+            id: categoryDoc.id,
+            name: categoryData?.name || '',
+            slug: categoryData?.slug || '',
+            color: categoryData?.color || '#000000'
+          }
+        } as NewsWithCategory);
+      }
+      
+      return {
+        data: newsWithCategory,
+        pagination: {
+          page: page,
+          totalPages: Math.ceil(totalItems / limit),
+          total: totalItems,
+          hasNext: startIndex + limit < totalItems,
+          hasPrev: page > 1,
+          limit
+        }
+      };
+    } catch (error) {
+      console.error('Get all published news error:', error);
+      throw new Error('Erro ao buscar notícias');
+    }
+  }
+
   // Get news statistics
   static async getNewsStats(): Promise<NewsStats> {
     try {
