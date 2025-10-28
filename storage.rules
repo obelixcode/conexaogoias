@@ -14,13 +14,27 @@ service firebase.storage {
       return isAuthenticated() && getUserRole() == 'admin';
     }
     
+    function isSuperAdmin() {
+      return isAuthenticated() && getUserRole() == 'super_admin';
+    }
+    
     function isEditor() {
-      return isAuthenticated() && getUserRole() in ['admin', 'editor'];
+      return isAuthenticated() && getUserRole() in ['admin', 'editor', 'super_admin'];
     }
     
     function isOwner(userId) {
       return isAuthenticated() && request.auth.uid == userId;
     }
+    
+    // Função alternativa usando UID direto (mais confiável)
+    function isAdminByUID() {
+      return isAuthenticated() && request.auth.uid in [
+        'yOq2irEaKrdWo5nolbwwr8xnqhw2', // admin@conexaogoias.com
+        'yFQeyKsxpvgnjDMB2kjlJqMvifZ2', // herbert@conexaogoias.com
+        'zrhO0AuVVxXeErxD883SrpoZGxg1'  // rafael2009121@gmail.com (super_admin)
+      ];
+    }
+    
     // Regras para imagens de capa de notícias
     match /covers/{fileName} {
       // Qualquer um pode ler imagens de capa (público)
@@ -49,7 +63,7 @@ service firebase.storage {
       allow read: if true;
       
       // Apenas admins podem fazer upload de banners
-      allow write: if isAdmin() &&
+      allow write: if isAdminByUID() &&
         request.resource.size < 10 * 1024 * 1024 && // 10MB max
         request.resource.contentType.matches('image/.*');
     }
@@ -91,7 +105,7 @@ service firebase.storage {
       allow read: if true;
       
       // Apenas admins podem fazer upload de favicons
-      allow write: if isAdmin() &&
+      allow write: if isAdminByUID() &&
         request.resource.size < 1 * 1024 * 1024 && // 1MB max
         request.resource.contentType.matches('image/.*');
     }
@@ -102,7 +116,7 @@ service firebase.storage {
       allow read: if true;
       
       // Apenas admins podem fazer upload de logos
-      allow write: if isAdmin() &&
+      allow write: if isAdminByUID() &&
         request.resource.size < 2 * 1024 * 1024 && // 2MB max
         request.resource.contentType.matches('image/.*');
     }
