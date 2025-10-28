@@ -301,7 +301,7 @@ export default function BannersPage() {
                   aspectRatio="banner"
                   className="w-full"
                   uploadType="banner"
-                  entityId={formData.id || `banner-${Date.now()}`}
+                  entityId={editingBanner?.id || `banner-${Date.now()}`}
                 />
               </div>
               
