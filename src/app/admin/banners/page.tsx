@@ -300,6 +300,8 @@ export default function BannersPage() {
                   currentImage={formData.imageUrl}
                   aspectRatio="banner"
                   className="w-full"
+                  uploadType="banner"
+                  entityId={formData.id || `banner-${Date.now()}`}
                 />
               </div>
               

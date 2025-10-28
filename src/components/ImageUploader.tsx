@@ -11,13 +11,17 @@ interface ImageUploaderProps {
   currentImage?: string;
   className?: string;
   aspectRatio?: 'square' | 'video' | 'banner';
+  uploadType?: 'banner' | 'cover' | 'content';
+  entityId?: string; // ID da notícia, banner, etc
 }
 
 export function ImageUploader({ 
   onImageUploaded, 
   currentImage,
   className = '',
-  aspectRatio = 'video'
+  aspectRatio = 'video',
+  uploadType = 'cover',
+  entityId
 }: ImageUploaderProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -46,13 +50,27 @@ export function ImageUploader({
     setUploadProgress(0);
 
     try {
-      const imageUrl = await StorageService.uploadBannerImage(
-        file, 
-        `temp-${Date.now()}`,
-        (progress) => {
-          setUploadProgress(progress);
-        }
-      );
+      let imageUrl: string;
+      
+      // Use o método de upload correto baseado no tipo
+      if (uploadType === 'banner') {
+        imageUrl = await StorageService.uploadBannerImage(
+          file, 
+          entityId || `temp-${Date.now()}`,
+          (progress) => setUploadProgress(progress)
+        );
+      } else if (uploadType === 'cover') {
+        imageUrl = await StorageService.uploadCoverImage(
+          file, 
+          entityId || `temp-${Date.now()}`,
+          (progress) => setUploadProgress(progress)
+        );
+      } else { // content
+        imageUrl = await StorageService.uploadContentImage(
+          file, 
+          (progress) => setUploadProgress(progress)
+        );
+      }
       
       onImageUploaded(imageUrl);
       

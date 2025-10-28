@@ -305,6 +305,8 @@ export default function EditorPage() {
                   onImageUploaded={handleImageUpload}
                   currentImage={coverImageUrl}
                   aspectRatio="video"
+                  uploadType="cover"
+                  entityId={`new-${Date.now()}`}
                 />
                 {!coverImageUrl && (
                   <p className="text-red-500 text-sm mt-2">

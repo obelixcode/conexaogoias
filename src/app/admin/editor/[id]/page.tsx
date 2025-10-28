@@ -381,6 +381,8 @@ export default function EditorPage({ params }: EditorPageProps) {
                   onImageUploaded={handleImageUpload}
                   currentImage={coverImageUrl}
                   aspectRatio="video"
+                  uploadType="cover"
+                  entityId={resolvedParams.id}
                 />
               </CardContent>
             </Card>
