@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Upload, X, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { StorageService } from '@/lib/storageService';
+import { isFirebaseStorageUrl } from '@/utils';
 
 interface ImageUploaderProps {
   onImageUploaded: (url: string) => void;
@@ -147,6 +148,7 @@ export function ImageUploader({
               fill
               className="object-cover rounded-lg"
               sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              unoptimized={isFirebaseStorageUrl(preview)}
             />
             
             {/* Upload progress overlay */}

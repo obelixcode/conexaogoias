@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { isFirebaseStorageUrl } from '@/utils';
 import { 
   BarChart3, 
   Plus, 
@@ -485,6 +486,7 @@ export default function BannersPage() {
                           alt={banner.title}
                           fill
                           className="object-cover"
+                          unoptimized={isFirebaseStorageUrl(banner.image)}
                           onError={(e) => {
                             const target = e.target as HTMLImageElement;
                             target.style.display = 'none';

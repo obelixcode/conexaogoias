@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { FeaturedNews } from '@/types/news';
 import { formatDate } from '@/utils/formatDate';
+import { isFirebaseStorageUrl } from '@/utils';
 
 interface FeaturedNewsGridProps {
   featuredNews: FeaturedNews[];
@@ -132,6 +133,7 @@ function FeaturedNewsCard({ news, variant }: FeaturedNewsCardProps) {
               ? '100vw'
               : '(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 20vw'
           }
+          unoptimized={isFirebaseStorageUrl(news.coverImage)}
         />
         
         {/* Overlay gradiente mais escuro */}

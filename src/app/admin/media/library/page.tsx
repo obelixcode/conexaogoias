@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { isFirebaseStorageUrl } from '@/utils';
 import { 
   Image as ImageIcon, 
   Upload, 
@@ -276,6 +277,7 @@ export default function MediaLibraryPage() {
                     width={800}
                     height={600}
                     className="max-w-full h-auto rounded-lg"
+                    unoptimized={isFirebaseStorageUrl(previewItem.url)}
                   />
                 </div>
               ) : previewItem.type === 'video' ? (
@@ -449,6 +451,7 @@ export default function MediaLibraryPage() {
                       alt={item.alt || item.name}
                       fill
                       className="object-cover"
+                      unoptimized={isFirebaseStorageUrl(item.url)}
                     />
                   ) : (
                     <FileText className="h-8 w-8 text-gray-400" />

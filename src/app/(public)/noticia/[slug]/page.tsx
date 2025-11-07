@@ -7,7 +7,7 @@ import { ArrowLeft, Share2, Eye, Calendar, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { NewsService } from '@/lib/newsService';
 import { RelatedNews } from '@/components/RelatedNews';
-import { formatNewsDate, formatLongDate, generateMetaDescription } from '@/utils';
+import { formatNewsDate, formatLongDate, generateMetaDescription, isFirebaseStorageUrl } from '@/utils';
 import { SocialShareButtons } from '@/components/SocialShareButtons';
 import { ViewsCounter } from '@/components/ViewsCounter';
 
@@ -163,6 +163,7 @@ async function NewsPageContent({ slug }: { slug: string }) {
           className="object-cover"
           priority
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+          unoptimized={isFirebaseStorageUrl(news.coverImage)}
         />
       </div>
 

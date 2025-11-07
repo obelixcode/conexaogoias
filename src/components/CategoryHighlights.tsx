@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { CategoryHighlight, HighlightPost } from '@/types/category';
+import { isFirebaseStorageUrl } from '@/utils';
 
 interface CategoryHighlightsProps {
   highlights: CategoryHighlight[];
@@ -65,6 +66,7 @@ export function CategoryHighlights({ highlights }: CategoryHighlightsProps) {
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-200"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                      unoptimized={isFirebaseStorageUrl(post.coverImage)}
                     />
                   </div>
 
@@ -112,6 +114,7 @@ export function CategoryHighlights({ highlights }: CategoryHighlightsProps) {
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-200"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                        unoptimized={isFirebaseStorageUrl(post.coverImage)}
                       />
                     </div>
 

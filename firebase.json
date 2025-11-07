@@ -5,6 +5,23 @@
   },
   "storage": {
     "rules": "storage.rules"
+  },
+  "hosting": {
+    "source": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "**/.next/**",
+      "**/out/**",
+      "**/*.md",
+      "**/scripts/**",
+      "**/*.tar.gz",
+      "**/*.backup"
+    ],
+    "frameworksBackend": {
+      "region": "us-central1"
+    }
   }
 }
 

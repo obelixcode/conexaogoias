@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { NewsService } from '@/lib/newsService';
 import { NewsWithCategory } from '@/types';
 import { formatDate } from '@/utils/formatDate';
-import { extractTextFromHtml } from '@/utils';
+import { extractTextFromHtml, isFirebaseStorageUrl } from '@/utils';
 import { NewsListSkeleton } from '@/components/LoadingSkeleton';
 
 function SearchContent() {
@@ -87,6 +87,7 @@ function SearchContent() {
                               width={128}
                               height={96}
                               className="w-32 h-24 object-cover rounded-lg"
+                              unoptimized={isFirebaseStorageUrl(news.coverImage)}
                             />
                           </div>
                         )}

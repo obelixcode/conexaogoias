@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { isFirebaseStorageUrl } from '@/utils';
 import { 
   User, 
   Shield, 
@@ -262,6 +263,7 @@ export default function ProfilePage() {
                       width={96}
                       height={96}
                       className="w-full h-full object-cover"
+                      unoptimized={isFirebaseStorageUrl(avatarPreview)}
                     />
                   ) : (
                     <User className="h-12 w-12 text-gray-400" />

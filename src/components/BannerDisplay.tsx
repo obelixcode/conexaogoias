@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { Banner } from '@/types/banner';
 import { BannerService } from '@/lib/bannerService';
+import { isFirebaseStorageUrl } from '@/utils';
 
 interface BannerDisplayProps {
   banners: Banner[];
@@ -53,10 +54,6 @@ export function BannerDisplay({ banners, className = '', variant = 'default' }: 
     }
   };
 
-  // Função para verificar se a URL é do Firebase Storage
-  const isFirebaseStorageUrl = (url: string): boolean => {
-    return url.includes('firebasestorage.googleapis.com');
-  };
 
   // Função para tentar corrigir URLs problemáticas
   const fixImageUrl = (url: string): string => {
@@ -113,7 +110,6 @@ export function BannerDisplay({ banners, className = '', variant = 'default' }: 
         const fixedImageUrl = fixImageUrl(banner.image);
         const hasInvalidUrl = !isValidImageUrl(fixedImageUrl);
         const canLoad = canLoadImage(fixedImageUrl);
-        const isFirebaseUrl = isFirebaseStorageUrl(fixedImageUrl);
         
         return (
           <div
@@ -146,9 +142,7 @@ export function BannerDisplay({ banners, className = '', variant = 'default' }: 
                     console.log('✅ Imagem do banner carregada com sucesso:', banner.title);
                   }}
                   // Para URLs do Firebase Storage, usar unoptimized como na administração
-                  {...(isFirebaseUrl && {
-                    unoptimized: true
-                  })}
+                  unoptimized={isFirebaseStorageUrl(fixedImageUrl)}
                   // Adicionar prioridade para banners importantes
                   priority={variant === 'header'}
                 />

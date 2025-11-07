@@ -33,6 +33,13 @@ export function getAbsoluteUrl(path: string): string {
   return `${baseUrl}${path.startsWith('/') ? path : `/${path}`}`;
 }
 
+// Firebase Storage URL detection
+export function isFirebaseStorageUrl(url: string): boolean {
+  if (!url) return false;
+  return url.includes('firebasestorage.googleapis.com') || 
+         url.includes('.firebasestorage.app');
+}
+
 export function getNewsUrl(slug: string): string {
   return `/noticia/${slug}`;
 }

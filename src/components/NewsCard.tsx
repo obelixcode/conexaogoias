@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { formatNewsDate } from '@/utils/formatDate';
 import { NewsWithCategory } from '@/types';
-import { getCategoryBadgeClass } from '@/utils';
+import { getCategoryBadgeClass, isFirebaseStorageUrl } from '@/utils';
 
 interface NewsCardProps {
   news: NewsWithCategory;
@@ -47,6 +47,7 @@ export function NewsCard({
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                   sizes="80px"
+                  unoptimized={isFirebaseStorageUrl(news.coverImage)}
                 />
               ) : (
                 <div className="w-full h-full bg-gray-200 flex items-center justify-center">
@@ -79,6 +80,7 @@ export function NewsCard({
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-300"
               sizes={variant === 'featured' ? '400px' : '300px'}
+              unoptimized={isFirebaseStorageUrl(news.coverImage)}
             />
           ) : (
             <div className="w-full h-full bg-gray-200 flex items-center justify-center">
