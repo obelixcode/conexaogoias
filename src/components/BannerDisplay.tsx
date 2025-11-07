@@ -117,7 +117,7 @@ export function BannerDisplay({ banners, className = '', variant = 'default' }: 
             className="relative group cursor-pointer overflow-hidden rounded-lg bg-white border border-gray-200"
             onClick={() => handleBannerClick(banner)}
           >
-            <div className={`relative w-full ${getHeight()} overflow-hidden`}>
+            <div className={`relative w-full ${getHeight()} overflow-hidden bg-gray-100`}>
               {hasImageError || hasInvalidUrl || !canLoad ? (
                 // Fallback quando a imagem não carrega ou URL é inválida
                 <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
@@ -128,31 +128,44 @@ export function BannerDisplay({ banners, className = '', variant = 'default' }: 
                   </div>
                 </div>
               ) : (
-                // Usar Next.js Image igual à administração (sem sizes para Firebase Storage)
-                <Image
-                  src={fixedImageUrl}
-                  alt={banner.title}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  onError={() => {
-                    console.warn(`Erro ao carregar imagem do banner ${banner.id}:`, fixedImageUrl);
-                    handleImageError(banner.id, fixedImageUrl);
-                  }}
-                  onLoad={() => {
-                    console.log('✅ Imagem do banner carregada com sucesso:', banner.title);
-                  }}
-                  // Para URLs do Firebase Storage, usar unoptimized como na administração
-                  unoptimized={isFirebaseStorageUrl(fixedImageUrl)}
-                  // Adicionar prioridade para banners importantes
-                  priority={variant === 'header'}
-                />
+                <>
+                  {/* Imagem de fundo com blur para preencher espaços vazios */}
+                  <Image
+                    src={fixedImageUrl}
+                    alt=""
+                    fill
+                    className="object-cover blur-md scale-110 opacity-50"
+                    unoptimized={isFirebaseStorageUrl(fixedImageUrl)}
+                    aria-hidden="true"
+                    onError={() => {
+                      console.warn(`Erro ao carregar imagem de fundo do banner ${banner.id}:`, fixedImageUrl);
+                    }}
+                  />
+                  
+                  {/* Imagem principal com object-contain para não cortar */}
+                  <Image
+                    src={fixedImageUrl}
+                    alt={banner.title}
+                    fill
+                    className="object-contain relative z-10 group-hover:scale-105 transition-transform duration-300"
+                    onError={() => {
+                      console.warn(`Erro ao carregar imagem do banner ${banner.id}:`, fixedImageUrl);
+                      handleImageError(banner.id, fixedImageUrl);
+                    }}
+                    onLoad={() => {
+                      console.log('✅ Imagem do banner carregada com sucesso:', banner.title);
+                    }}
+                    unoptimized={isFirebaseStorageUrl(fixedImageUrl)}
+                    priority={variant === 'header'}
+                  />
+                </>
               )}
-              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300" />
+              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 z-20" />
             </div>
             
             {/* Banner title overlay - só mostra se a imagem carregou */}
             {banner.title && !hasImageError && !hasInvalidUrl && (
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 z-30">
                 <p className={`text-white font-medium line-clamp-2 ${variant === 'header' ? 'text-lg' : 'text-sm'}`}>
                   {banner.title}
                 </p>

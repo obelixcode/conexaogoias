@@ -38,7 +38,7 @@ import {
 import { StorageService } from '@/lib/storageService';
 import { useSafeDOM } from '@/hooks/useSafeDOM';
 import { ClientOnly } from './ClientOnly';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 interface EditorProps {
   content?: string;
@@ -99,8 +99,6 @@ function EditorContent({
       },
     },
   });
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Cleanup do editor quando o componente for desmontado
   useEffect(() => {
@@ -204,6 +202,7 @@ function EditorContent({
         {/* Text formatting */}
         <div className="flex items-center gap-1 border-r border-gray-200 pr-2 mr-2">
           <Button
+            type="button"
             variant={editor.isActive('bold') ? 'default' : 'ghost'}
             size="sm"
             onClick={() => editor.chain().focus().toggleBold().run()}
@@ -211,6 +210,7 @@ function EditorContent({
             <Bold className="h-4 w-4" />
           </Button>
           <Button
+            type="button"
             variant={editor.isActive('italic') ? 'default' : 'ghost'}
             size="sm"
             onClick={() => editor.chain().focus().toggleItalic().run()}
@@ -218,6 +218,7 @@ function EditorContent({
             <Italic className="h-4 w-4" />
           </Button>
           <Button
+            type="button"
             variant={editor.isActive('underline') ? 'default' : 'ghost'}
             size="sm"
             onClick={() => editor.chain().focus().toggleUnderline().run()}
@@ -225,6 +226,7 @@ function EditorContent({
             <UnderlineIcon className="h-4 w-4" />
           </Button>
           <Button
+            type="button"
             variant={editor.isActive('strike') ? 'default' : 'ghost'}
             size="sm"
             onClick={() => editor.chain().focus().toggleStrike().run()}
@@ -232,6 +234,7 @@ function EditorContent({
             <Strikethrough className="h-4 w-4" />
           </Button>
           <Button
+            type="button"
             variant={editor.isActive('code') ? 'default' : 'ghost'}
             size="sm"
             onClick={() => editor.chain().focus().toggleCode().run()}
@@ -243,6 +246,7 @@ function EditorContent({
         {/* Headings */}
         <div className="flex items-center gap-1 border-r border-gray-200 pr-2 mr-2">
           <Button
+            type="button"
             variant={editor.isActive('heading', { level: 1 }) ? 'default' : 'ghost'}
             size="sm"
             onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
@@ -250,6 +254,7 @@ function EditorContent({
             <Heading1 className="h-4 w-4" />
           </Button>
           <Button
+            type="button"
             variant={editor.isActive('heading', { level: 2 }) ? 'default' : 'ghost'}
             size="sm"
             onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
@@ -257,6 +262,7 @@ function EditorContent({
             <Heading2 className="h-4 w-4" />
           </Button>
           <Button
+            type="button"
             variant={editor.isActive('heading', { level: 3 }) ? 'default' : 'ghost'}
             size="sm"
             onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
@@ -268,6 +274,7 @@ function EditorContent({
         {/* Lists */}
         <div className="flex items-center gap-1 border-r border-gray-200 pr-2 mr-2">
           <Button
+            type="button"
             variant={editor.isActive('bulletList') ? 'default' : 'ghost'}
             size="sm"
             onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -275,6 +282,7 @@ function EditorContent({
             <List className="h-4 w-4" />
           </Button>
           <Button
+            type="button"
             variant={editor.isActive('orderedList') ? 'default' : 'ghost'}
             size="sm"
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
@@ -282,6 +290,7 @@ function EditorContent({
             <ListOrdered className="h-4 w-4" />
           </Button>
           <Button
+            type="button"
             variant={editor.isActive('blockquote') ? 'default' : 'ghost'}
             size="sm"
             onClick={() => editor.chain().focus().toggleBlockquote().run()}
@@ -293,6 +302,7 @@ function EditorContent({
         {/* Alignment */}
         <div className="flex items-center gap-1 border-r border-gray-200 pr-2 mr-2">
           <Button
+            type="button"
             variant={editor.isActive({ textAlign: 'left' }) ? 'default' : 'ghost'}
             size="sm"
             onClick={() => editor.chain().focus().setTextAlign('left').run()}
@@ -300,6 +310,7 @@ function EditorContent({
             <AlignLeft className="h-4 w-4" />
           </Button>
           <Button
+            type="button"
             variant={editor.isActive({ textAlign: 'center' }) ? 'default' : 'ghost'}
             size="sm"
             onClick={() => editor.chain().focus().setTextAlign('center').run()}
@@ -307,6 +318,7 @@ function EditorContent({
             <AlignCenter className="h-4 w-4" />
           </Button>
           <Button
+            type="button"
             variant={editor.isActive({ textAlign: 'right' }) ? 'default' : 'ghost'}
             size="sm"
             onClick={() => editor.chain().focus().setTextAlign('right').run()}
@@ -314,6 +326,7 @@ function EditorContent({
             <AlignRight className="h-4 w-4" />
           </Button>
           <Button
+            type="button"
             variant={editor.isActive({ textAlign: 'justify' }) ? 'default' : 'ghost'}
             size="sm"
             onClick={() => editor.chain().focus().setTextAlign('justify').run()}
@@ -325,6 +338,7 @@ function EditorContent({
         {/* Links and media */}
         <div className="flex items-center gap-1 border-r border-gray-200 pr-2 mr-2">
           <Button
+            type="button"
             variant={editor.isActive('link') ? 'default' : 'ghost'}
             size="sm"
             onClick={setLink}
@@ -332,6 +346,7 @@ function EditorContent({
             <LinkIcon className="h-4 w-4" />
           </Button>
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={() => editor.chain().focus().unsetLink().run()}
@@ -340,6 +355,7 @@ function EditorContent({
             <Unlink className="h-4 w-4" />
           </Button>
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={addImage}
@@ -352,6 +368,7 @@ function EditorContent({
         {/* Colors */}
         <div className="flex items-center gap-1 border-r border-gray-200 pr-2 mr-2">
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={() => editor.chain().focus().setColor('#ef4444').run()}
@@ -359,6 +376,7 @@ function EditorContent({
             <div className="w-4 h-4 bg-red-500 rounded" />
           </Button>
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={() => editor.chain().focus().setColor('#f97316').run()}
@@ -366,6 +384,7 @@ function EditorContent({
             <div className="w-4 h-4 bg-orange-500 rounded" />
           </Button>
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={() => editor.chain().focus().setColor('#eab308').run()}
@@ -373,6 +392,7 @@ function EditorContent({
             <div className="w-4 h-4 bg-yellow-500 rounded" />
           </Button>
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={() => editor.chain().focus().setColor('#22c55e').run()}
@@ -380,6 +400,7 @@ function EditorContent({
             <div className="w-4 h-4 bg-green-500 rounded" />
           </Button>
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={() => editor.chain().focus().setColor('#3b82f6').run()}
@@ -387,6 +408,7 @@ function EditorContent({
             <div className="w-4 h-4 bg-blue-500 rounded" />
           </Button>
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={() => editor.chain().focus().setColor('#8b5cf6').run()}
@@ -394,6 +416,7 @@ function EditorContent({
             <div className="w-4 h-4 bg-purple-500 rounded" />
           </Button>
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={() => editor.chain().focus().unsetColor().run()}
@@ -405,6 +428,7 @@ function EditorContent({
         {/* Highlight */}
         <div className="flex items-center gap-1 border-r border-gray-200 pr-2 mr-2">
           <Button
+            type="button"
             variant={editor.isActive('highlight') ? 'default' : 'ghost'}
             size="sm"
             onClick={() => editor.chain().focus().toggleHighlight().run()}
@@ -416,6 +440,7 @@ function EditorContent({
         {/* Undo/Redo */}
         <div className="flex items-center gap-1">
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={() => editor.chain().focus().undo().run()}
@@ -424,6 +449,7 @@ function EditorContent({
             <Undo className="h-4 w-4" />
           </Button>
           <Button
+            type="button"
             variant="ghost"
             size="sm"
             onClick={() => editor.chain().focus().redo().run()}
