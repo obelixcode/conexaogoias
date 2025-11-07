@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import Script from 'next/script';
 import './globals.css';
 import { SettingsProvider } from '@/contexts/SettingsContext';
 import { UserProvider } from '@/contexts/UserContext';
@@ -71,6 +72,21 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
+      <head>
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-QWK5Z5C0PN"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-QWK5Z5C0PN');
+          `}
+        </Script>
+      </head>
       <body className={inter.className} suppressHydrationWarning>
         <SettingsProvider>
           <UserProvider>

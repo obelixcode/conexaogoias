@@ -12,23 +12,37 @@ interface SocialShareButtonsProps {
 }
 
 export function SocialShareButtons({ news, className = '' }: SocialShareButtonsProps) {
-  const newsUrl = getAbsoluteUrl(getNewsUrl(news.slug));
   const newsTitle = news.title;
   const newsDescription = news.subtitle || news.title;
+  const newsPath = getNewsUrl(news.slug);
+
+  // Use current browser URL instead of environment variable
+  const [baseUrl, setBaseUrl] = useState<string>('');
+  const [copied, setCopied] = useState(false);
+  const [hasNativeShare, setHasNativeShare] = useState(false);
+
+  useEffect(() => {
+    // Get current browser URL when component mounts
+    if (typeof window !== 'undefined') {
+      setBaseUrl(window.location.origin);
+    } else {
+      // Fallback to environment variable during SSR
+      const envUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+      setBaseUrl(envUrl.replace(/\/$/, ''));
+    }
+    
+    // Check for native share support only on client side
+    setHasNativeShare(typeof navigator !== 'undefined' && 'share' in navigator);
+  }, []);
+
+  // Construct news URL using current browser origin
+  const newsUrl = baseUrl ? `${baseUrl}${newsPath}` : getAbsoluteUrl(newsPath);
 
   const shareData = {
     title: newsTitle,
     text: newsDescription,
     url: newsUrl,
   };
-
-  const [copied, setCopied] = useState(false);
-  const [hasNativeShare, setHasNativeShare] = useState(false);
-
-  useEffect(() => {
-    // Check for native share support only on client side
-    setHasNativeShare(typeof navigator !== 'undefined' && 'share' in navigator);
-  }, []);
 
   const handleNativeShare = async () => {
     if (navigator.share) {
